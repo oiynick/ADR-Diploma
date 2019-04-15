@@ -16,6 +16,6 @@ class Strategy:
         elif strategy == 'lod':   # Launch-on-demand, no insurance
             self.limit = 999999999
             self.time = time
-            self.replacement_cost = satellite.cost + satellite.launch_cost + service
+            self.replacement_cost = satellite.cost + satellite.launch_cost
             self.start_cost = 0
             self.day = 0

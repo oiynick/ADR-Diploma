@@ -55,10 +55,6 @@ class Maths:
         t = ((sec/60.0 + min)/60.0 + h)/24.0
         return year - np.floor(m1 + m2 + day + 1721013.5 + t)
 
-    def d2r(degrees):
-        # TRANSFER DEGREES TO RADIANS
-        return np.pi/180*degrees
-
     def check_probe(reliability, iterations):
         # CHECK IF THE PROBABILITY WORKED FOR THE EXACT SAT
 

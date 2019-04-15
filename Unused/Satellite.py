@@ -103,7 +103,7 @@ class Satellite:
         for i in range(180):
             for j in range(90):
                 if self.R*np.acos(np.sin(lon)*np.sin(i) +
-                               np.cos(lon)*np.cos(i)*np.cos(lat-j)) <= r:
+                                  np.cos(lon)*np.cos(i)*np.cos(lat-j)) <= r:
                     result.extend([(i, j)])
         return result
 

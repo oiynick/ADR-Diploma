@@ -1,4 +1,4 @@
-import General
+import Classes
 import numpy as np
 
 R = 6378.137   # EARTH RADIUS
@@ -35,7 +35,7 @@ step = 1
 simtime = 1
 
 # CREATE A NEW INSTANCE OF SIMULATION
-Sim = General.Simulation(price, spps, incs, ppi, alts, eccs,
+Sim = Classes.Simulation(price, spps, incs, ppi, alts, eccs,
                          hr, vol, lams, ks, mass, strat, name)
 
 Sim.simulate(mstart, step, simtime)

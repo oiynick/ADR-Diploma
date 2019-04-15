@@ -1,25 +1,37 @@
 import numpy as np
-import Orbital
-from General.Strategy import Strategy
-from General.Company import Company
-from General.Market import Market
-from General.Maths import Maths
-from General.Maths import Trend
+from Classes.Strategy import Strategy
+from Classes.Market import Market
+from Classes.Maths import Maths
+from Classes.Maths import Trend
+from Classes.Satellite import Satellite
 
 
 class Simulation:
     # The class bringing all the simulation object
-    state = []
+    state = np.empty((), dtype='bool_')
     coverage = []   # Coverage revolution
     revenue = []   # Money obtained on the service selling
     irevenue = []   # Ideal revenue (no sats lost)
     cost = []   # Special constellation-related costs
     time = []   # Time array
+    
 
-    def __init__(self, price, spps, incs, ppi, alts, eccs,
-                 hr, volume, lams, ks, mass, strat: str, name: str,
-                 sat_alfa=50, lifetime=5, simtime, step):
-        self.constellation = []   # Create the array of satellites
+    def __init__(self, price, alt, volume, lams, ks, mass, strat: str,
+                 name: str,  sat_alfa=50, lt=5, simtime, step, acc):
+        # price -- service price estimation
+        # TODO: to be changed for model
+        # alt -- satellites altitude
+        # volume -- satellite volume
+        # lams -- lambdas for Weibull
+        # ks -- kef for Weibull
+        # mass -- satellite mass
+        # strat -- strategy name (none/ extra/ lod)
+        # sat_alfa -- FOV of the satellite antenna
+        # lt -- satellite lifetime estimation
+        # simtime -- simulation time period
+        # step -- timestep of the simulation
+        # acc -- step of the grid
+        satellite = Satellite(lams, mass, volume, lams, ks, alfa, alt)
 
         # Fill the array with the Satellite objects
         for i in range(len(alts)):
@@ -47,8 +59,6 @@ class Simulation:
         self.strat = Strategy(strat, 0, 0, 0)
         # Price of the flat-service
         self.price = price
-        # Create an instance of the company
-        self.spacex = Company(hr, 2, 0.6)
         # Output array
         self.metrics = np.zeros((simtime/step, 6))
 
@@ -58,7 +68,7 @@ class Simulation:
         if sat.state:
             if ts % 86400/scale != 0:
                 self.state.append(True)
-            elif Maths.check_probe(sat.get_reliability(ts), 1000):
+            elif Maths.check_probe(sat.get_reliability(ts), 300):
                 if Maths.check_probe(sat.density):
                     change = (4/3*np.pi*(sat.alt+10)**3 -
                               4/3*np.pi*(sat.alt-10)**3)*sat.density
@@ -82,6 +92,15 @@ class Simulation:
                 self.state.append(False)
                 sat.turn_t = sat.turn_t - 1
                 costs = costs + self.strat.day_cost
+
+    def upload(path1, path2, path3):
+        # path1 -- path for the focus point position
+        # path2 -- path for the money array
+
+        focus = np.loadtxt(path1)
+        money = np.loadtxt(path2)
+
+        return focus, money
 
     def simulate(self, mstart, step, simtime):
         # CACLULATING THE SIMULATION

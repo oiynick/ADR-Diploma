@@ -135,7 +135,7 @@ def static(pop, countries, c_data, rp_data, price, inter):
                 # Calculate the koef based on the c-related data
                 kef = c_data[1, cd_i[1]] / c_data[2, cd_i[1]]
                 # Assign the data to the cell
-                data[i, j] = pop[i, j]*rp/kef
+                data[i, j] = pop[i, j]*rp/kef*100
             else:
                 data[i, j] = 0
     return data
