@@ -1,43 +1,37 @@
 import Classes
 import numpy as np
 
-R = 6378.137   # EARTH RADIUS
-
 # Boundary conditions
 # Business
-price = 75   # $ per month
-
-# Orbital
-spps = np.array([50, 50, 75, 75])   # Satellites per plane
-alts = np.array([R + 1110, R + 1130, R + 1275, R + 1325])   # Altitudes
-incs = np.array([53.8, 74, 81, 70])    # Inclinations
-ppi = np.array([32, 8, 5, 6])   # Number of planes per inclination
-eccs = np.array([0, 0, 0, 0])  # Eccentrisities
-
-# Company details
-hr = 10000   # Amount of employees in the company
+price = 100   # $ per month
 
 # Satellite characteristics
 mass = 400   # Kgs dry mass
 vol = 0.1   # M3
+alt = 1000   # km
 
 # WeiBull probability
-lams = np.array([])
+ls = np.array([])
 ks = np.array([])
+
+# Constellation parameters
+n = 1000
+planes = 36
 
 # Spare strategy
 strat = 'none'
-name = 'spacex'
 
-# Time
-mstart = np.array([0, 0, 0, 0, 0, 0])
-step = 1
-simtime = 1
+# Simulation parameters
+step = 100   # seconds
+simtime = 2592100   # seconds
 
 # CREATE A NEW INSTANCE OF SIMULATION
-Sim = Classes.Simulation(price, spps, incs, ppi, alts, eccs,
-                         hr, vol, lams, ks, mass, strat, name)
+sim = Classes.Simulation(mass, vol, ls, ks, 40, alt, 0.075,
+                         n, planes, price,
+                         strat,
+                         simtime, step, 1)
 
-Sim.simulate(mstart, step, simtime)
 
-Sim.export()
+sim.simulate()
+
+sim.export()

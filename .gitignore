@@ -4,3 +4,5 @@
 *.asc
 .DS_Store
 Raw_data/.DS_Store
+PP_Data/lat.txt
+PP_Data/lon.txt

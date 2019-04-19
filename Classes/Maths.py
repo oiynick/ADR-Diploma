@@ -12,11 +12,13 @@ class Trend:
         self.end = en
         self.endt = ent
         if ttype == 'lin':
-            self.res = lambda time: (en-st)/ent*time + st
+            self.res = lambda t: (en-st)/ent*t + st
         elif ttype == 'poly2':
-            self.res = lambda time: (en-st)/(en*ent)*time**2 + st
+            self.res = lambda t: (en-st)/(en*ent)*t**2 + st
         elif ttype == 'expo':
-            self.res = lambda time: st + np.exp(time*np.ln(en-st)/ent)
+            self.res = lambda t: st + np.exp(t*np.ln(en-st)/ent)
+        elif ttype == 'poly05':
+            self.res = lambda t: (en-st)/(en*ent)*t**2 + st
         else:
             raise TypeError('Wrong type!')
 
