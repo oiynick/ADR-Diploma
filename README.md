@@ -16,8 +16,9 @@ The script has some external libraries dependencies but has no version conflicts
 
 The project is missing several important parts:
 1. The Population data .asc - too large to be uploaded;
-2. References;
-3. Outputs.
+2. The lon/ lat of the satellite points, made before using GMAT;
+3. References;
+4. Outputs.
 
 ### Project hierarchy
 The project composed to be splitted by **preprocessing** part, **core** and **postprocessing**. 
