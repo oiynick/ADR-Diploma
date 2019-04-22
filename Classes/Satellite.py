@@ -37,14 +37,16 @@ class Satellite:
 
         return col
 
-    def get_reliability(self, t):
+    def get_reliability(self, t, step):
         # Retrieve final reliability
         reliability = 0
 
         # Sum up all the Weibull reliabilities
         for k in self.ks:
             for l in self.lams:
-                rel = k/l*(t/l)**(k-1)*np.exp(-(t/l**k))
+                # rel = k/l*(t/l)**(k-1)*np.exp(-(t/l**k))
+                # Formula from article, no launch, time in years
+                rel = np.exp(-(t/(k*31104000/step))**l)
                 reliability = reliability + rel
 
         # Add collision reliability on the specified altitude

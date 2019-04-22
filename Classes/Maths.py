@@ -18,7 +18,7 @@ class Trend:
         elif ttype == 'expo':
             self.res = lambda t: st + np.exp(t*np.ln(en-st)/ent)
         elif ttype == 'poly05':
-            self.res = lambda t: (en-st)/(en*ent)*t**2 + st
+            self.res = lambda t: (en-st)/(en*ent)*t**.5 + st
         else:
             raise TypeError('Wrong type!')
 
@@ -49,12 +49,12 @@ class Maths:
                          [-np.sin(x), np.cos(x), 0],
                          [0, 0, 1]])
 
-    def jtime(yr, mon, day, h, min, sec):
+    def jtime(yr, mon, day, h, mint, sec):
         # TRANSFERING USUAL DATE INTO JULIAN
         year = 367.0 * yr
         m1 = 7*(yr + np.floor((mon + 9)/12.0))*0.25
         m2 = np.floor(275 * mon/9.0)
-        t = ((sec/60.0 + min)/60.0 + h)/24.0
+        t = ((sec/60.0 + mint)/60.0 + h)/24.0
         return year - np.floor(m1 + m2 + day + 1721013.5 + t)
 
     def check_probe(reliability, iterations):

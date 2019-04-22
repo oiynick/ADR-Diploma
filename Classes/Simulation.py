@@ -1,4 +1,5 @@
 import numpy as np
+import datetime as dt
 from Classes.Strategy import Strategy
 from Classes.Maths import Maths
 from Classes.Maths import Trend
@@ -69,20 +70,20 @@ class Simulation:
         # 7 -- debris density in the orbit
         self.metrics = np.zeros((int(simtime/step), 7))
 
-    def switcher(self, state, ts):
+    def switcher(self, states, index, ts):
         # Based on the probability switch the satellite on or off
         # Each ts according to Weibull func
         # Returns costs on switching
         cost = 0
 
-        if state >= 0:
-            if Maths.check_probe(self.sat.get_reliability(ts), 100):
-                state = - self.strat.time
+        if states[index] >= 0:
+            if Maths.check_probe(self.sat.get_reliability(ts, self.step), 100):
+                states[index] = - self.strat.time
                 cost = self.strat.replacement_cost
             else:
-                state = state + 1
+                states[index] = states[index] + 1
         else:
-            state = state + 1
+            states[index] = states[index] + 1
             cost = self.strat.day_cost/86400*self.step
 
         return cost
@@ -106,11 +107,11 @@ class Simulation:
             coverage = 0   # Coverage
             for i in range(self.n):
                 # Tease for switching
-                cost = self.switcher(self.state[i], ts)
+                costs = costs + self.switcher(self.state, i, ts)
 
                 # Assembling and launch
                 if ts == 0:
-                    costs = self.sat.launch_cost + self.sat.cost
+                    costs += self.sat.launch_cost + self.sat.cost
 
                 # Get coverage points revenue
                 points = self.sat.coverage(self.lon[ts, i],
@@ -122,14 +123,14 @@ class Simulation:
 
                 # Coverage and costs
                 if self.state[i] >= 0:
-                    coverage = coverage + self.sat.cov
-                    costs = cost + self.sat.operational_cost/2592000*self.step
-                    rev = rev + revenue*m[ts]
+                    coverage += self.sat.cov
+                    costs += self.sat.operational_cost/2592000*self.step
+                    rev += revenue*m[ts]
                 else:
-                    dens = dens + self.sat.vol
+                    dens += self.sat.vol
 
-                irev = irev + revenue*m[ts]
-                icosts = icosts + self.sat.operational_cost/2592000*self.step
+                irev += revenue*m[ts]
+                icosts += self.sat.operational_cost/2592000*self.step
                 i += 1
 
             self.metrics[ts, 0] = ts*self.step
@@ -141,5 +142,8 @@ class Simulation:
             self.metrics[ts, 6] = dens
 
     def export(self):
-        np.savetxt("output.csv", self.metrics, delimiter=',', fmt=':.3f',
+        cur = dt.datetime.now()
+        now = cur.strftime("%d-%m %H:%M")
+        np.savetxt("./Output/{}.csv".format(now), self.metrics, delimiter=',',
+                   fmt='%1.3f',
                    header="t(s), cv(%), R(US$), iR(US$), C(US$), iC(US$), d")

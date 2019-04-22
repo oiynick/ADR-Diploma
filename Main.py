@@ -10,9 +10,10 @@ mass = 400   # Kgs dry mass
 vol = 0.1   # M3
 alt = 1000   # km
 
-# WeiBull probability
-ls = np.array([])
-ks = np.array([])
+# WeiBull probability, numbers from article
+# https://doi.org/10.1016/j.ress.2009.05.004
+ls = np.array([0.4521])
+ks = np.array([2607])
 
 # Constellation parameters
 n = 1000
