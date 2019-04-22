@@ -92,7 +92,7 @@ class Simulation:
         # CACLULATING THE SIMULATION
 
         i = 0
-        m = Trend('poly05', 0.05, 0.3, 155520, 1)   # Trend object
+        m = Trend('expo', 0.05, 0.3, 155520, 1)   # Trend object
 
         rev = 0   # Overall revenue
         irev = 0   # Overall ideal revenue
