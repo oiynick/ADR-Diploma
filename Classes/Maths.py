@@ -16,7 +16,7 @@ class Trend:
         elif ttype == 'poly2':
             self.res = lambda t: (en-st)/(en*ent)*t**2 + st
         elif ttype == 'expo':
-            self.res = lambda t: st + np.exp(t*np.ln(en-st)/ent)
+            self.res = lambda t: st + np.exp(t*np.log(en-st)/ent)
         elif ttype == 'poly05':
             self.res = lambda t: (en-st)/(en*ent)*t**.5 + st
         else:
