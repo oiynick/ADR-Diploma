@@ -17,7 +17,6 @@ ks = np.array([2607])
 
 # Constellation parameters
 n = 1000
-planes = 36
 
 # Spare strategy
 strat = 'none'
@@ -28,7 +27,7 @@ simtime = 2592100   # seconds
 
 # CREATE A NEW INSTANCE OF SIMULATION
 sim = Classes.Simulation(mass, vol, ls, ks, 40, alt, 0.075,
-                         n, planes, price,
+                         n, price,
                          strat,
                          simtime, step, 1)
 

@@ -15,7 +15,7 @@ class Simulation:
     time = []   # Time array
 
     def __init__(self, mass, volume, lams, ks, alfa, alt, cov,   # Sat
-                 n, planes, price,   # Constellation and service
+                 n, price,   # Constellation and service
                  strat: str,   # Classes
                  simtime, step, acc):   # Simulation
         '''
@@ -32,7 +32,6 @@ class Simulation:
         step -- timestep size of the simulation in seconds
         acc -- step of the grid
         n -- number of satellites in the constellation
-        planes -- number of planes in the constellation
         '''
 
         # Create a satellite class object with appropriate parameters
@@ -40,7 +39,6 @@ class Simulation:
 
         # Fill the atributes with numbers
         self.n = n
-        self.planes = planes
         self.simtime = simtime
         self.step = step
         self.acc = acc
@@ -92,6 +90,7 @@ class Simulation:
         # CACLULATING THE SIMULATION
 
         i = 0
+        # TODO: take market real numbers for trend
         m = Trend('expo', 0.05, 0.3, 155520, 1)   # Trend object
 
         rev = 0   # Overall revenue
