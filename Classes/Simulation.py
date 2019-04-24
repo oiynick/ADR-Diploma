@@ -55,7 +55,7 @@ class Simulation:
         # the uptime of the satellite
         self.state = np.loadtxt('./PP_Data/lifetime.txt')
         # Spare strategy
-        self.strat = Strategy(strat, 0, 0, 0)
+        self.strat = Strategy(0, 0, 0, strat)
         # Price of the flat-service per step
         self.price = price/2592000*step
         # Output array
