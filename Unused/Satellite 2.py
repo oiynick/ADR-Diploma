@@ -36,6 +36,21 @@ class Satellite:
         # col = 1 - np.exp(-density*self.vol**(1/3)*t*12)
         return density
 
+    def get_reliability(self, t, step):
+        # Retrieve final reliability
+        reliability = 0
+
+        # Sum up all the Weibull reliabilities
+        for k in self.ks:
+            for l in self.lams:
+                # rel = k/l*(t/l)**(k-1)*np.exp(-(t/l**k))
+                # Formula from article, no launch, time in years
+                rel = np.exp(-(t/(k*31104000/step))**l)
+                reliability = reliability + rel
+
+        # Add collision reliability on the specified altitude
+        return reliability
+
     def launch_cost(self, path):
         # Calculate launch cost based on SMAD model and specification
         # TODO: dynamic pricing

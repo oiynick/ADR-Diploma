@@ -57,6 +57,22 @@ class Maths:
         t = ((sec/60.0 + mint)/60.0 + h)/24.0
         return year - np.floor(m1 + m2 + day + 1721013.5 + t)
 
+    def check_probe(reliability, iterations):
+        # CHECK IF THE PROBABILITY WORKED FOR THE EXACT SAT
+
+        # RUN THE MONTE-CARLO TYPE METHOD
+        summy = 0
+        for index in range(iterations):
+            summy = summy + random.randint(0, 100)
+        average = summy/iterations
+
+        print(average)
+        # GIVE THE VERDICT
+        if average <= reliability*100:
+            return True
+        else:
+            return False
+
     def smart_interp(array, value):
         # Runs the linear interpolation if it is necessary
         # If there's any value that not follows the array - return Exception

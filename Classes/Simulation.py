@@ -53,7 +53,7 @@ class Simulation:
         # time by the absolute, -9999 if the replacement is not taken into
         # account if the satellite state is "in operation" the number shows
         # the uptime of the satellite
-        self.state = np.zeros(n)
+        self.state = np.loadtxt('./PP_Data/lifetime.txt')
         # Spare strategy
         self.strat = Strategy(strat, 0, 0, 0)
         # Price of the flat-service per step
@@ -74,15 +74,18 @@ class Simulation:
         # Returns costs on switching
         cost = 0
 
-        if states[index] >= 0:
-            if Maths.check_probe(self.sat.get_reliability(ts, self.step), 100):
+        if states[index] > 0:
+            if states[index] != 1:
+                states[index] = states[index] - 1
+            else:
                 states[index] = - self.strat.time
                 cost = self.strat.replacement_cost
-            else:
-                states[index] = states[index] + 1
         else:
-            states[index] = states[index] + 1
-            cost = self.strat.day_cost/86400*self.step
+            if states[index] != 0:
+                states[index] = states[index] + 1
+                cost = self.strat.day_cost/86400*self.step
+            else:
+                states[index] = 2207521
 
         return cost
 
@@ -91,13 +94,13 @@ class Simulation:
 
         i = 0
         # TODO: take market real numbers for trend
-        m = Trend('expo', 0.05, 0.3, 155520, 1)   # Trend object
+        m = Trend('lin', 0.0005, 0.1, 155520, 1)   # Trend object
 
         rev = 0   # Overall revenue
         irev = 0   # Overall ideal revenue
         costs = 0   # Technical costs
         icosts = 0   # Ideal technical costs
-        dens = 0   # Additional density on the altitude
+        dens = self.sat.collision()   # Additional density on the altitude
 
         for ts in range(int(self.simtime/self.step)):
             # Status in %
