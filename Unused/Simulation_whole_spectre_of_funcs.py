@@ -8,6 +8,11 @@ from Classes.Satellite import Satellite
 
 class Simulation:
     # The class bringing the simulation object
+    coverage = []   # Coverage revolution
+    revenue = []   # Money obtained on the service selling
+    irevenue = []   # Ideal revenue (no sats lost)
+    cost = []   # Special constellation-related costs
+    time = []   # Time array
 
     def __init__(self, mass, volume, lams, ks, alfa, alt, cov,   # Sat
                  n, price,   # Constellation and service
@@ -62,6 +67,13 @@ class Simulation:
         # 6 -- ideal costs
         # 7 -- debris density in the orbit
         self.metrics = np.zeros((int(simtime/step), 7))
+        self.coverage = 0
+        self.rev = 0
+        self.irev = 0
+        self.costs = 0
+        self.icosts = 0
+        self.dens = self.sat.collision()
+        self.start = time.time()
 
     def switcher(self, states, index, ts):
         # Based on the probability switch the satellite on or off
@@ -97,7 +109,100 @@ class Simulation:
                     states[i] = -state + start - self.strat.time
         return states
 
-    def part_sim(self, start, stop, write=False):
+    def simulate(self):
+        # CACLULATING THE SIMULATION
+        # TODO: take market real numbers for trend
+        m = Trend('lin', 0.0005, 0.1, 155520, 1)   # Trend object
+
+        rev = 0   # Overall revenue
+        irev = 0   # Overall ideal revenue
+        costs = 0   # Technical costs
+        icosts = 0   # Ideal technical costs
+        dens = self.sat.collision()   # Additional density on the altitude
+
+        for ts in range(int(self.simtime/self.step)):
+            # Status in %
+            print('{:.2f}'.format(ts*self.step/self.simtime*100))
+
+            coverage = 0   # Coverage
+            for i in range(self.n):
+                # Tease for switching
+                costs = costs + self.switcher(self.state, i, ts)
+
+                # Assembling and launch
+                if ts == 0:
+                    costs += self.sat.launch_cost + self.sat.cost
+
+                # Get coverage points revenue
+                points = self.sat.coverage(self.lon[ts, i],
+                                           self.lat[ts, i], self.acc)
+                revenue = 0
+                for p in points:
+                    revenue = self.money[int(p[0]/self.acc),
+                                         int(p[1]/self.acc)]*self.price
+
+                # Coverage and costs
+                if self.state[i] >= 0:
+                    coverage += self.sat.cov
+                    costs += self.sat.operational_cost/2592000*self.step
+                    rev += revenue*m[ts]
+                else:
+                    dens += self.sat.vol
+
+                irev += revenue*m[ts]
+                icosts += self.sat.operational_cost/2592000*self.step
+
+            self.metrics[ts, 0] = ts*self.step
+            self.metrics[ts, 1] = coverage
+            self.metrics[ts, 2] = rev
+            self.metrics[ts, 3] = irev
+            self.metrics[ts, 4] = costs
+            self.metrics[ts, 5] = icosts
+            self.metrics[ts, 6] = dens
+
+    def sim_step(self, ts):
+        # CACLULATING THE SIMULATION
+        # TODO: take market real numbers for trend
+        m = Trend('lin', 0.0005, 0.1, 155520, 1)   # Trend object
+        # Status in %
+        print('{:.2f}'.format(self.step*ts*100/self.simtime))
+        if ts % 1000 == 0:
+            print('time passed: {}'.format(time.time() - self.start))
+
+        for i in range(self.n):
+            # Tease for switching
+            self.costs += self.switcher(self.state, i, ts)
+
+            # Assembling and launch
+            if ts == 0:
+                self.costs += self.sat.launch_cost + self.sat.cost
+
+            # Get coverage points revenue
+            points = self.sat.coverage(self.lon[ts, i],
+                                       self.lat[ts, i], self.acc)
+            revenue = 0
+            for p in points:
+                revenue = self.money[int(p[0]/self.acc),
+                                     int(p[1]/self.acc)]*self.price
+
+            # Coverage and costs
+            if self.state[i] >= 0:
+                self.coverage += self.sat.cov
+                self.costs += self.sat.operational_cost/2592000*self.step
+                self.rev += revenue*m[ts]
+            else:
+                self.dens += self.sat.vol
+
+            self.irev += revenue*m[ts]
+            self.icosts += self.sat.operational_cost/2592000*self.step
+
+        new = np.array([ts*self.step, self.coverage, self.rev, self.irev,
+                        self.costs, self.icosts, self.dens])
+        return new
+
+
+
+    def pool_sim_print(self, start, stop):
         # CACLULATING THE PART OF SIMULATION
         # including 'start' not including 'stop'
 
@@ -110,15 +215,12 @@ class Simulation:
         metrics = np.zeros((int(stop-start), 7))   # Output array
 
         for ts in range(start, stop):
-            # Show the status in % and time passed if required
-            if write:
-                # Show only new percentages and with .01 precision
-                if 100/(stop-start)*ts - complete > 0.005:
-                    print('{:.2f}'.format(100/(stop-start)*ts))
-                complete = 100/(stop-start)*ts
-                # For some steps show the time passed
-                if ts % 100 == 0:
-                    print('time passed: {} seconds'.format(time.clock() - st))
+            # Status in %
+            if 100/(stop-start)*ts - complete > 0.005:
+                print('{:.2f}'.format(100/(stop-start)*ts))
+            complete = 100/(stop-start)*ts
+            if ts % 100 == 0:
+                print('time passed: {} seconds'.format(time.clock() - st))
 
             # Reset the parameters
             coverage = 0   # Coverage
@@ -153,6 +255,60 @@ class Simulation:
 
                 irev += revenue*m[ts]
                 icosts += self.sat.operational_cost/2592000*self.step
+
+            metrics[ts, 0] = ts*self.step
+            metrics[ts, 1] = coverage
+            metrics[ts, 2] = rev
+            metrics[ts, 3] = irev
+            metrics[ts, 4] = costs
+            metrics[ts, 5] = icosts
+            metrics[ts, 6] = dens
+        return metrics
+
+    def pool_sim(self, start, stop):
+        # CACLULATING THE PART OF SIMULATION
+        # including 'start' not including 'stop'
+        i = 0
+        # TODO: take market real numbers for trend
+        m = Trend('lin', 0.0005, 0.1, 155520, 1)   # Trend object
+        states = self.states_arr(start)   # Create states matrix for the part
+        metrics = np.zeros((int(stop-start), 7))   # Output array
+
+        for ts in range(stop, start):
+            # Reset the parameters
+            rev = 0   # Overall revenue
+            irev = 0   # Overall ideal revenue
+            costs = 0   # Technical costs
+            icosts = 0   # Ideal technical costs
+            dens = 0   # Additional density on the altitude
+            coverage = 0   # Coverage
+            for i in range(self.n):
+                # Tease for switching
+                costs = costs + self.switcher(states, i, ts)
+
+                # Assembling and launch
+                if ts == 0:
+                    costs += self.sat.launch_cost + self.sat.cost
+
+                # Get coverage points revenue
+                points = self.sat.coverage(self.lon[ts, i],
+                                           self.lat[ts, i], self.acc)
+                revenue = 0
+                for p in points:
+                    revenue = self.money[int(p[0]/self.acc),
+                                         int(p[1]/self.acc)]*self.price
+
+                # Coverage and costs
+                if states[i] >= 0:
+                    coverage += self.sat.cov
+                    costs += self.sat.operational_cost/2592000*self.step
+                    rev += revenue*m[ts]
+                else:
+                    dens += self.sat.vol
+
+                irev += revenue*m[ts]
+                icosts += self.sat.operational_cost/2592000*self.step
+                i += 1
 
             metrics[ts, 0] = ts*self.step
             metrics[ts, 1] = coverage
