@@ -54,7 +54,7 @@ if __name__ == '__main__':
                             (int(ch*i),
                              int(ch*(i+1)),)) for i in range(int(cpus-1))]
     # Assign the last function as printed and give it remaining elements
-    res_print = pool.apply_async(sim.pool_sim_print,
+    res_print = pool.apply_async(sim.part_sim,
                                  (
                                          int(ch*(cpus-1)),
                                          int(cpus*ch + steps % cpus),
@@ -63,8 +63,6 @@ if __name__ == '__main__':
     # Close & join the pool to commit the operations on multiprocessing
     pool.close()
     pool.join()
-    res_print.wait()
-    print(res_print.successful())
     # Create the array of addition (to calculate the cumulatiive metrics)
     last = [0, 0, 0, 0, 0, 0, 0]
     for r in res:
