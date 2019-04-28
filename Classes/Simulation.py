@@ -1,6 +1,7 @@
 import numpy as np
 import datetime as dt
 import time
+import os
 from Classes.Strategy import Strategy
 from Classes.Maths import Trend
 from Classes.Satellite import Satellite
@@ -32,23 +33,20 @@ class Simulation:
         # Create a satellite class object with appropriate parameters
         self.sat = Satellite(mass, volume, lams, ks, alfa, alt, cov)
 
-        # Fill the atributes with numbers
+        # Fill the atributes of the simulation with numbers
         self.n = n
-        self.simtime = simtime
-        self.step = step
+        self.simtime = int(simtime)
+        self.step = int(step)
         self.acc = acc
+        self.steps = int(simtime / step)
 
-        # Upload files
+        # Upload files longitude, latitude of the undersat point on the Earth
+        # money is for money grid, lifetime is for array of lifetimes
         self.lon = np.loadtxt('./PP_Data/lon.txt').T
         self.lat = np.loadtxt('./PP_Data/lat.txt').T
         self.money = np.loadtxt('./PP_Data/data.txt')
-
-        # Create an empty state-array
-        # The array takes a negative value that equaled to the replacement
-        # time by the absolute, -9999 if the replacement is not taken into
-        # account if the satellite state is "in operation" the number shows
-        # the uptime of the satellite
         self.state = np.loadtxt('./PP_Data/lifetime.txt')
+
         # Spare strategy
         self.strat = Strategy(0, 0, 0, strat)
         # Price of the flat-service per step
@@ -64,20 +62,17 @@ class Simulation:
         self.metrics = np.zeros((int(simtime/step), 7))
 
     def switcher(self, states, index, ts):
-        # Based on the probability switch the satellite on or off
-        # Each ts according to Weibull func
-        # Returns costs on switching
+        # Check if the simulation time step hits the EOL point of the sat
         cost = 0
-
         if states[index] > 0:
             if states[index] != 1:
-                states[index] = states[index] - 1
+                states[index] -= 1
             else:
                 states[index] = - self.strat.time
                 cost = self.strat.replacement_cost
         else:
             if states[index] != 0:
-                states[index] = states[index] + 1
+                states[index] += 1
                 cost = self.strat.day_cost/86400*self.step
             else:
                 states[index] = 2207521
@@ -92,12 +87,12 @@ class Simulation:
                 states[i] = state - start
             else:
                 if state - start + self.strat.time < 0:
-                    states[i] = state - start - self.strat.time
+                    states[i] = 9999999
                 else:
-                    states[i] = -state + start - self.strat.time
+                    states[i] = -state + start
         return states
 
-    def part_sim(self, start, stop, write=False):
+    def part_sim(self, start, stop):
         # CACLULATING THE PART OF SIMULATION
         # including 'start' not including 'stop'
 
@@ -111,14 +106,13 @@ class Simulation:
 
         for ts in range(start, stop):
             # Show the status in % and time passed if required
-            if write:
-                # Show only new percentages and with .01 precision
-                if 100/(stop-start)*ts - complete > 0.005:
-                    print('{:.2f}'.format(100/(stop-start)*ts))
-                complete = 100/(stop-start)*ts
-                # For some steps show the time passed
-                if ts % 100 == 0:
-                    print('time passed: {} seconds'.format(time.clock() - st))
+            # Current percentage and time
+            cur_p = 100/self.steps*ts
+            now_is = time.clock() - st
+            # Show only new percentages and with .01 precision
+            if stop == self.steps and (cur_p - complete) >= .01:
+                print('{:.2f}% done, in {:.2f} seconds'.format(cur_p, now_is))
+                complete = cur_p
 
             # Reset the parameters
             coverage = 0   # Coverage
