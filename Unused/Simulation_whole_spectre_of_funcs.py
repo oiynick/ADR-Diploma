@@ -76,20 +76,17 @@ class Simulation:
         self.start = time.time()
 
     def switcher(self, states, index, ts):
-        # Based on the probability switch the satellite on or off
-        # Each ts according to Weibull func
-        # Returns costs on switching
+        # Check if the simulation time step hits the EOL point of the sat
         cost = 0
-
         if states[index] > 0:
             if states[index] != 1:
-                states[index] = states[index] - 1
+                states[index] -= 1
             else:
                 states[index] = - self.strat.time
                 cost = self.strat.replacement_cost
         else:
             if states[index] != 0:
-                states[index] = states[index] + 1
+                states[index] += 1
                 cost = self.strat.day_cost/86400*self.step
             else:
                 states[index] = 2207521
@@ -104,9 +101,9 @@ class Simulation:
                 states[i] = state - start
             else:
                 if state - start + self.strat.time < 0:
-                    states[i] = state - start - self.strat.time
+                    states[i] = 9999999
                 else:
-                    states[i] = -state + start - self.strat.time
+                    states[i] = -state + start
         return states
 
     def simulate(self):
@@ -309,6 +306,71 @@ class Simulation:
                 irev += revenue*m[ts]
                 icosts += self.sat.operational_cost/2592000*self.step
                 i += 1
+
+            metrics[ts, 0] = ts*self.step
+            metrics[ts, 1] = coverage
+            metrics[ts, 2] = rev
+            metrics[ts, 3] = irev
+            metrics[ts, 4] = costs
+            metrics[ts, 5] = icosts
+            metrics[ts, 6] = dens
+        return metrics
+
+    def part_sim(self, start: int, stop: int):
+        # CACLULATING THE PART OF SIMULATION
+        # including 'start' not including 'stop'
+
+        # Starting time
+        st = time.clock()
+        # TODO: take market real numbers for trend
+        m = Trend('lin', 0.0005, 0.15, 155520, 1)
+        states = self.states_arr(start)   # Create states matrix for the part
+        complete = 0   # Percentage of progress
+        metrics = np.zeros((stop-start, 7))   # Output array
+
+        for ts in range(start, stop):
+            # Show the status in % and time passed if required
+            # Current percentage and time
+            cur_p = 100/self.steps*ts
+            now_is = time.clock() - st
+            # Show only new percentages and with .01 precision
+            if stop == self.steps and (cur_p - complete) >= .01:
+                print('{:.2f}% done, in {:.2f} seconds'.format(cur_p, now_is))
+                complete = cur_p
+
+            # Reset the parameters
+            coverage = 0   # Coverage
+            rev = 0   # Overall revenue
+            irev = 0   # Overall ideal revenue
+            costs = 0   # Technical costs
+            icosts = 0   # Ideal technical costs
+            dens = 0   # Additional density on the altitude
+            for i in range(self.n):
+                # Tease for switching off or on
+                costs = costs + self.switcher(states, i, ts)
+
+                # Assembling and launch
+                if ts == 0:
+                    costs += self.sat.launch_cost + self.sat.cost
+
+                # Get coverage points revenue
+                points = Simulation.coverage(self.sat, self.lon[ts, i],
+                                             self.lat[ts, i], self.acc)
+                revenue = 0
+                for p in points:
+                    revenue += self.money[int(p[0]/self.acc),
+                                          int(p[1]/self.acc)]*self.price
+
+                # Coverage and costs
+                if states[i] >= 0:
+                    coverage += self.sat.cov
+                    costs += self.sat.operational_cost/2592000*self.step
+                    rev += revenue*m[ts]
+                else:
+                    dens += self.sat.vol
+
+                irev += revenue*m[ts]
+                icosts += self.sat.operational_cost/2592000*self.step
 
             metrics[ts, 0] = ts*self.step
             metrics[ts, 1] = coverage

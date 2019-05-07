@@ -7,7 +7,7 @@ R = 6378.137
 class Satellite:
     # Satellite class
 
-    def __init__(self, mass, vol, lams, ks, alfa, alt, cov):
+    def __init__(self, mass, vol, alfa, alt, cov):
         # Satellite parameters
         self.alfa = alfa   # Antenna FOV
         self.m = mass   # MASS OF THE SATELLITE
@@ -15,10 +15,6 @@ class Satellite:
         self.alt = alt   # The satellite altitude
         self.dens = 0   # Debris density in the orbit
         self.cov = cov   # Coverage percentage for the sat
-
-        # Weibull coefficients
-        self.lams = lams
-        self.ks = ks
 
         # Price parameters
         self.cost = self.sat_cost('./Raw_data/sats/spacex.csv')
@@ -80,27 +76,3 @@ class Satellite:
 
         return 0.2*(Bus + Str + Thr + ADC +
                     EPS + PRO + TTC + CDH) + (Pay + IAT + Prg + Grn)
-
-    def coverage(self, lon, lat, acc):
-        # Return the array of dots for the coverage area
-        # lat-lon is satellite antenna focus point on Earth
-
-        r = (self.alt)*np.tan(np.deg2rad(self.alfa/2))   # Coverage radius
-        mdist = np.ceil(r/100)   # Maximum possible deviation in degrees
-
-        # Iterate through coords around the focus point
-        result = []
-        for i in np.arange(np.floor(lon-mdist), np.ceil(lon+mdist), acc):
-            for j in np.arange(np.floor(lat-mdist), np.ceil(lat+mdist), acc):
-                # Translate to radians
-                rlat = np.deg2rad(lat)
-                rlon = np.deg2rad(lon)
-                ri = np.deg2rad(i)
-                rj = np.deg2rad(j)
-
-                # Calculate the distance and decide whether the point is in
-                # the circle or not
-                if R*np.arccos(np.sin(rlat)*np.sin(rj) +
-                               np.cos(rlat)*np.cos(rj)*np.cos(rlon-ri)) <= r:
-                    result.append((i, j))
-        return result
