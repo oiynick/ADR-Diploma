@@ -126,7 +126,7 @@ class Simulation:
             # r -- on reparation
             # f -- failed
             # n -- not working
-            if self.states[i, ts] == 'o':
+            if self.states[ts, i] == 'o':
                 costs += self.sat.operational_cost/2592000*self.step
                 coverage += self.sat.cov
                 revenue = 0
@@ -135,12 +135,12 @@ class Simulation:
                     revenue = self.money[int(p[0]/self.acc),
                                          int(p[1]/self.acc)]*self.price
                 rev += revenue*m[ts]
-            elif self.states[i, ts] == 'i':
+            elif self.states[ts, i] == 'i':
                 costs += self.strat.replacement_cost
                 costs += self.strat.day_cost/86400*self.step
-            elif self.states[i, ts] == 'r':
+            elif self.states[ts, i] == 'r':
                 costs += self.strat.day_cost/86400*self.step
-            elif self.states[i, ts] == 'f':
+            elif self.states[ts, i] == 'f':
                 dens += self.sat.vol
 
             irev += revenue*m[ts]
