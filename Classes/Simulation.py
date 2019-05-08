@@ -60,9 +60,10 @@ class Simulation:
         # Upload the matrix of the probabilities
         arr = np.empty((self.steps, self.n), dtype='object')
         p = []
-        for i in range(self.steps):
+        for i in range(2207520):
             p.append((1 - np.exp(-(i/81088128)**.4521)))
-        lt = rnd(range(self.steps), weights=p, k=self.n)
+        p.append(1)
+        lt = rnd(range(2207521), weights=p, k=self.n)
         for ts in range(self.steps):
             for i in range(self.n):
                 if ts < lt[i]:
@@ -72,7 +73,7 @@ class Simulation:
                         arr[ts, i] = 'f'
                     else:
                         arr[ts, i] = 'i'
-                        new_lt = rnd(range(self.steps), weights=p, k=1)
+                        new_lt = rnd(range(2207521), weights=p, k=1)
                         lt[i] += new_lt + self.strat.time
                 elif ts < lt[i] + self.strat.time:
                     if self.strat.str == 'none':
@@ -157,7 +158,7 @@ class Simulation:
             irev += revenue*m[ts]
             icosts += self.sat.operational_cost/2592000*self.step
         # Output array
-        return np.array([ts, cov, rev, irev, costs, icosts, dens], ndmin=2)
+        return [ts, cov, rev, irev, costs, icosts, dens]
 
     def export(self, *args):
         # Take the array to be exported, or nothing
