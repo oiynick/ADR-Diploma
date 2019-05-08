@@ -49,8 +49,8 @@ if __name__ == '__main__':
     data = np.zeros((1, 7))
     # Create a proress bar
     for _ in tqdm.tqdm(pl.imap_unordered(sim.step_sim, args,
-                                         int(cpus + 1)),
-                        total=len(args)):
+                                         int(cpus + 1)), total=steps):
+        print(_)
         np.append(data, _, axis=0)
 
     # UNCOMMENT FOR RUNNING FOR SHORTER (LONGER?) INTERVALS
