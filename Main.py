@@ -49,7 +49,7 @@ if __name__ == '__main__':
     data = np.zeros((1, 7))
     # Create a proress bar
     for _ in tqdm.tqdm(pl.imap_unordered(sim.step_sim, args,
-                                         int(steps/(cpus + 1))),
+                                         int(cpus + 1)),
                         total=len(args)):
         np.append(data, _, axis=0)
 
