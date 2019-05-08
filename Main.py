@@ -41,23 +41,22 @@ if __name__ == '__main__':
 
     data = np.zeros((1, 7))
     # Create a proress bar
-    for _ in tqdm.tqdm(pl.imap_unordered(sim.step_sim, args,
-                                         int(steps/(2*cpus))),
-                       total=len(args), miniters=1, mininterval=0.1):
-        np.append(data, _, axis=0)
-
-    # UNCOMMENT FOR RUNNING FOR SHORTER (LONGER?) INTERVALS
 # =============================================================================
-#     for _ in tqdm.tqdm(pl.imap_unordered(sim.step_sim, args),
-#                        total=len(args),
-#                        miniters=1, mininterval=0.1):
+#     for _ in tqdm.tqdm(pl.imap_unordered(sim.step_sim, args,
+#                                          int(steps/(2*cpus))),
+#                        total=len(args), miniters=1, mininterval=0.1):
 #         np.append(data, _, axis=0)
 # =============================================================================
+
+    # UNCOMMENT FOR RUNNING FOR SHORTER (LONGER?) INTERVALS
+    for _ in tqdm.tqdm(pl.imap_unordered(sim.step_sim, args),
+                       total=len(args),
+                       miniters=1, mininterval=0.1):
+        np.append(data, _, axis=0)
 
     # Close & join the pool to commit the operations on multiprocessing
     pl.close()
     pl.join
-    pl.close()
 
     # Calculate the cumulative sum of metrics (except coverage and timestep)
     # cum = np.cumsum(data[:, 2:], 0)
@@ -68,7 +67,7 @@ if __name__ == '__main__':
     sim.export(data)
 # =============================================================================
 # if __name__ == '__main__':
-# 
+#
 #     cpus = os.cpu_count()   # Number of CPUs
 #     data = np.zeros((1, 7))   # Empty output array of shape
 #     steps = int(simtime / step)   # Amount of simulation steps
