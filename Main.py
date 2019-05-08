@@ -24,7 +24,7 @@ strat = 'none'
 
 # Simulation parameters
 step = int(100)   # seconds
-simtime = int(50100)   # seconds
+simtime = int(2592100)   # seconds
 steps = int(simtime/step)
 
 # CREATE A NEW INSTANCE OF SIMULATION
@@ -50,7 +50,6 @@ if __name__ == '__main__':
     # Create a proress bar
     for i in tqdm.tqdm(pl.imap_unordered(sim.step_sim, args,
                                          int(cpus + 1)), total=steps):
-        print(i)
         data.append(i)
 
     # UNCOMMENT FOR RUNNING FOR SHORTER (LONGER?) INTERVALS
