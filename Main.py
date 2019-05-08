@@ -4,6 +4,7 @@ import os
 import tqdm
 import multiprocessing as mp
 from datetime import datetime as dt
+import time
 
 print('Starting time is {}'.format(dt.now().strftime("%H:%M:%S")))
 # Boundary conditions
@@ -23,7 +24,7 @@ strat = 'none'
 
 # Simulation parameters
 step = int(100)   # seconds
-simtime = int(2592100)   # seconds
+simtime = int(100100)   # seconds
 steps = int(simtime/step)
 
 # CREATE A NEW INSTANCE OF SIMULATION
@@ -34,6 +35,12 @@ sim = Classes.Simulation(mass, vol, 40, alt, 0.075,
 
 print('Prepared for simulation in {}'.format(dt.now().strftime("%H:%M:%S")))
 
+# =============================================================================
+# # Time check
+# start = time.time()
+# rtrn = sim.step_sim(1)
+# =============================================================================
+
 if __name__ == '__main__':
     cpus = os.cpu_count()
     pl = mp.Pool()   # Create the pool object
@@ -41,18 +48,18 @@ if __name__ == '__main__':
 
     data = np.zeros((1, 7))
     # Create a proress bar
-# =============================================================================
-#     for _ in tqdm.tqdm(pl.imap_unordered(sim.step_sim, args,
-#                                          int(steps/(2*cpus))),
-#                        total=len(args), miniters=1, mininterval=0.1):
-#         np.append(data, _, axis=0)
-# =============================================================================
+    for _ in tqdm.tqdm(pl.imap_unordered(sim.step_sim, args,
+                                         int(steps/(cpus**2+1))),
+                        total=len(args)):
+        np.append(data, _, axis=0)
 
     # UNCOMMENT FOR RUNNING FOR SHORTER (LONGER?) INTERVALS
-    for _ in tqdm.tqdm(pl.imap_unordered(sim.step_sim, args),
-                       total=len(args),
-                       miniters=1, mininterval=0.1):
-        np.append(data, _, axis=0)
+# =============================================================================
+#     for _ in tqdm.tqdm(pl.imap_unordered(sim.step_sim, args),
+#                        total=len(args),
+#                        miniters=1, mininterval=0.1):
+#         np.append(data, _, axis=0)
+# =============================================================================
 
     # Close & join the pool to commit the operations on multiprocessing
     pl.close()

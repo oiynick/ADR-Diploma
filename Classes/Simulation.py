@@ -1,8 +1,8 @@
 import numpy as np
-import os
+# from time import time as tt
 import datetime as dt
 from random import choices as rnd
-from geopy import distance
+# from geopy import distance
 
 # Custom classes import
 from Classes.Strategy import Strategy
@@ -86,20 +86,30 @@ class Simulation:
                         arr[ts, i] = 'o'
         return arr
 
-    def coverage(sat, lon, lat, acc):
+    def coverage(self, sat, lon, lat, acc):
         # Return the array of dots for the coverage area
         # lat-lon is satellite antenna focus point on Earth
 
         r = (sat.alt)*np.tan(np.pi * (sat.alfa/2)/180)   # Coverage radius
-        mdist = np.ceil(r/100)   # Maximum possible deviation in degrees
-
+        mdist = np.ceil(r/111)   # Maximum possible deviation in degrees
+        res = []
         # Iterate through coords around the focus point
         for i in np.arange(np.floor(lon-mdist), np.ceil(lon+mdist), acc):
             for j in np.arange(np.floor(lat-mdist), np.ceil(lat+mdist), acc):
                 # Calculate the distance and decide whether the point is in
                 # the circle or not
-                if distance.distance((lat, lon), (j, i)).km <= r:
-                    yield (i, j)
+
+                # dist = distance.great_circle((lat, lon), (j, i)).km
+
+                rlat = np.deg2rad(lat)
+                rlon = np.deg2rad(lon)
+                ri = np.deg2rad(i)
+                rj = np.deg2rad(j)
+                dist = R*np.arccos(np.sin(rlat)*np.sin(rj) +
+                                   np.cos(rlat)*np.cos(rj)*np.cos(rlon-ri))
+                if dist <= r:
+                    res.append((i, j))
+        return res
 
     def step_sim(self, ts):
         # CACLULATING A STEP OF SIMULATION
@@ -119,8 +129,13 @@ class Simulation:
                 costs += self.sat.launch_cost + self.sat.cost
 
             # Get the satellite coverage as generator
-            points = Simulation.coverage(self.sat, self.lon[ts, i],
-                                         self.lat[ts, i], self.acc)
+            points = self.coverage(self.sat, self.lon[ts, i],
+                                   self.lat[ts, i], self.acc)
+            revenue = 0
+            # Get the revenue for the coverage
+            for p in points:
+                revenue = self.money[int(p[0]/self.acc),
+                                     int(p[1]/self.acc)]*self.price
             # Check the satellite state for:
             # o -- operating
             # i -- interrupted
@@ -130,11 +145,6 @@ class Simulation:
             if self.states[ts, i] == 'o':
                 costs += self.sat.operational_cost/2592000*self.step
                 cov += self.sat.coverage
-                revenue = 0
-                # Get the revenue for the coverage
-                for p in points:
-                    revenue = self.money[int(p[0]/self.acc),
-                                         int(p[1]/self.acc)]*self.price
                 rev += revenue*m[ts]
             elif self.states[ts, i] == 'i':
                 costs += self.strat.replacement_cost
