@@ -14,7 +14,7 @@ class Satellite:
         self.vol = vol   # The satellite average volume
         self.alt = alt   # The satellite altitude
         self.dens = 0   # Debris density in the orbit
-        self.cov = cov   # Coverage percentage for the sat
+        self.coverage = cov   # Coverage percentage for the sat
 
         # Price parameters
         self.cost = self.sat_cost('./Raw_data/sats/spacex.csv')

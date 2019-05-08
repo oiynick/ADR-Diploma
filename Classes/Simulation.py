@@ -1,4 +1,5 @@
 import numpy as np
+import os
 import datetime as dt
 from random import choices as rnd
 from geopy import distance
@@ -105,7 +106,7 @@ class Simulation:
         # TODO: take market real numbers for trend
         m = Trend('lin', 0.0005, 0.15, 155520, 1)   # Trend object
         # Reset the parameters
-        coverage = 0   # Coverage
+        cov = 0   # Coverage
         rev = 0   # Overall revenue
         irev = 0   # Overall ideal revenue
         costs = 0   # Technical costs
@@ -128,7 +129,7 @@ class Simulation:
             # n -- not working
             if self.states[ts, i] == 'o':
                 costs += self.sat.operational_cost/2592000*self.step
-                coverage += self.sat.cov
+                cov += self.sat.coverage
                 revenue = 0
                 # Get the revenue for the coverage
                 for p in points:
@@ -146,10 +147,10 @@ class Simulation:
             irev += revenue*m[ts]
             icosts += self.sat.operational_cost/2592000*self.step
         # Output array
-        return np.array([ts, coverage, rev, irev, costs, icosts, dens])
+        return np.array([ts, cov, rev, irev, costs, icosts, dens], ndmin=2)
 
     def export(self, *args):
-        # file is the name of data file, that has to be exported
+        # Take the array to be exported, or nothing
         cur = dt.datetime.now()
         now = cur.strftime("%d-%m %H:%M")
         if len(args) == 0:
