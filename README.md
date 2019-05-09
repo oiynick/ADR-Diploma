@@ -12,6 +12,8 @@ The script has some external libraries dependencies but has no version conflicts
 1. Numpy;
 2. [Aeronet lib](https://github.com/aeronetlab/aeronetlib);
 3. CSV;
+4. multiprocessing tools;
+5. Random Choices lib (available only on Python >3.6
 4. Shapely.
 
 The project is missing several important parts:
@@ -26,8 +28,8 @@ The project composed to be splitted by **preprocessing** part, **core** and **po
 The **preprocessing** part is based on the *raw data* and preparing the data for processing and simulation part. Results obtaines by the **preprocessing** part are stored in the *PP_Data* folder.
 
 The **core** is composed to run all the main methods and initiate all the main classes of the model to simulate orbital, marketing and financial processes. Thus, this part has several most important classes:
-* Maths - contains all the mathematical methods, not available in numpy for celestrial mechanics and other applications;
-* Strategy/ Company - classes to set up relative parameters of insurance strategy and company CAPEX and OPEX metrics;
+* Helpers - containing all the helping classes -- Strategy and Trend;
+* Data_Array - contains most of the preprocessing functions;
 * Satellite - sets up all the satellite data and metrics;
 * Simulation - the instance of that class contains main information regarding the simulation process.
 
