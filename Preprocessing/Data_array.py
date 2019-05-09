@@ -1,10 +1,28 @@
 import numpy as np
 import csv
-from Maths import Maths
 from aeronet import dataset as ds
 import shapely
 
-''' JUST REMEMBA DAT FUCKIN' LONGITUDE GOES 1ST!!!!!!!!'''
+
+def smart_interp(array, value):
+    # Runs the linear interpolation if it is necessary
+    # If there's any value that not follows the array - return Exception
+    for i in range(len(array)):
+        if value == array[i][0]:
+            toggle = True
+            return array[i][1]
+        elif value > float(array[i][0]) and value < float(array[i+1][0]):
+            y2 = float(array[i+1][1])
+            y1 = float(array[i][1])
+            x2 = float(array[i+1][0])
+            x1 = float(array[i][0])
+
+            new_y = value*(y2-y1)/(x2-x1) + (x1*y2-x2*y1)/(x1-x2)
+            toggle = True
+            return new_y
+
+    if value > array[len(array)-1][0] or value < array[0][0] or ~toggle:
+        raise Exception('Out of array range or smth else happened!')
 
 
 def pop_array(path):
@@ -124,8 +142,8 @@ def static(pop, countries, c_data, rp_data, price, inter):
                 # Find the data for rich-poor by the country code
                 rp_i = np.where(rp_data == 'oth')
                 # Interp it depending on the price given
-                rp = 1 - Maths.smart_interp(rp_data[1, rp_i[1]][0],
-                                            price*12/inter)/100
+                rp = 1 - smart_interp(rp_data[1, rp_i[1]][0],
+                                      price*12/inter)/100
                 # Find the data for households bu the country code
                 cd_i = np.where(c_data == name)
 

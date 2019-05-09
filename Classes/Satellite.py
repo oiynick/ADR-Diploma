@@ -21,7 +21,7 @@ class Satellite:
         self.launch_cost = self.launch_cost('./Raw_data/sats/spacex.csv')
         self.operational_cost = 20000   # US dollars per month of operation
 
-    def collision(self):
+    def dens(self):
         # Set the sandart distribution of the debris density
         lil = 1.146*10**(-6)*np.exp(-((self.alt - 856.9)/126.7)**2)   # R20.92
         med = 1.34*10**(-7)*np.exp(-((self.alt - 860.8)/153)**2)   # R20.83

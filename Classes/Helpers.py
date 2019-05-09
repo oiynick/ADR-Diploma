@@ -1,3 +1,6 @@
+import numpy as np
+
+
 class Strategy:
     # The class of the spare strategy and the insurance strategy
     def __init__(self, strategy: str, sat, time: int):
@@ -18,3 +21,29 @@ class Strategy:
             self.replacement_cost = sat.cost + sat.launch_cost
             self.start_cost = 0
             self.day = 0
+
+
+class Trend:
+
+    def __init__(self, ttype, st, en, ent, maxm):
+        st = st/maxm
+        en = en/maxm
+        self.start = st
+        self.end = en
+        self.endt = ent
+        if ttype == 'lin':
+            self.res = lambda t: (en-st)/ent*t + st
+        elif ttype == 'poly2':
+            self.res = lambda t: (en-st)/(en*ent)*t**2 + st
+        elif ttype == 'expo':
+            self.res = lambda t: st + np.exp(t*np.log(en-st)/ent)
+        elif ttype == 'poly05':
+            self.res = lambda t: (en-st)/(en*ent)*t**.5 + st
+        else:
+            raise TypeError('Wrong type!')
+
+    def __getitem__(self, index: int):
+        if index > self.endt:
+            return self.end
+        else:
+            return self.res(index)

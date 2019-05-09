@@ -1,4 +1,4 @@
-from .Maths import Maths
+from .Helpers import Trend
+from .Helpers import Strategy
 from .Simulation import Simulation
-from .Maths import Trend
 from .Satellite import Satellite

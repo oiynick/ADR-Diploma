@@ -5,8 +5,8 @@ from random import choices as rnd
 # from geopy import distance
 
 # Custom classes import
-from Classes.Strategy import Strategy
-from Classes.Maths import Trend
+from Classes.Helpers import Strategy
+from Classes.Helpers import Trend
 from Classes.Satellite import Satellite
 R = 6378.137
 
