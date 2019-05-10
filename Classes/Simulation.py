@@ -135,8 +135,8 @@ class Simulation:
             revenue = 0
             # Get the revenue for the coverage
             for p in points:
-                revenue = self.money[int(p[0]/self.acc),
-                                     int(p[1]/self.acc)]*self.price
+                revenue += self.money[int(p[0]/self.acc),
+                                      int(p[1]/self.acc)]*self.price
             # Check the satellite state for:
             # o -- operating
             # i -- interrupted

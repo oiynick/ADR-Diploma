@@ -48,12 +48,19 @@ if __name__ == '__main__':
     # Close & join the pool to commit the operations on multiprocessing
     pl.close()
     pl.join
-    results = np.array(data)
+    out = np.array(data)
+
+    # Sorting the array by the time axis
+    sort = np.empty_like(out)
+    ind = np.argsort(out[:, 0], axis=0)
+    for i, ix in enumerate(ind):
+        for j in range(len(out[0, :])):
+            sort[i, j] = out[ix, j]
 
     # Calculate the cumulative sum of metrics (except coverage and timestep)
-    # cum = np.cumsum(data[:, 2:], 0)
-    # result = np.concatenate((data[:, :2], cum), 1)
+    cum = np.cumsum(sort[:, 2:], 0)
+    result = np.concatenate((sort[:, :2], cum), 1)
 
     # Export the file
     print('Finish time is {}'.format(dt.now().strftime("%H:%M:%S")))
-    sim.export(results)
+    sim.export(result)
