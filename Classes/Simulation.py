@@ -1,7 +1,7 @@
 import numpy as np
+from numpy.random import choice as rnd
 # from time import time as tt
 import datetime as dt
-from random import choices as rnd
 # from geopy import distance
 
 # Custom classes import
@@ -59,11 +59,11 @@ class Simulation:
     def status(self):
         # Upload the matrix of the probabilities
         arr = np.empty((self.steps, self.n), dtype='object')
-        p = []
-        for i in range(2207520):
-            p.append((1 - np.exp(-(i/81088128)**.4521)))
-        p.append(1)
-        lt = rnd(range(2207521), weights=p, k=self.n)
+        p = [.15]
+        for i in range(1, 2207520):
+            p.append(.000120114*np.exp(-.000265681*i**.4521)/i**.5479)
+        p.append(1 - sum(p))
+        lt = rnd(range(len(p)), size=self.n, p=p)
         for ts in range(self.steps):
             for i in range(self.n):
                 if ts < lt[i]:
@@ -73,7 +73,7 @@ class Simulation:
                         arr[ts, i] = 'f'
                     else:
                         arr[ts, i] = 'i'
-                        new_lt = rnd(range(2207521), weights=p, k=1)
+                        new_lt = rnd(range(2207521), size=1, p=p)
                         lt[i] += new_lt + self.strat.time
                 elif ts < lt[i] + self.strat.time:
                     if self.strat.str == 'none':
@@ -123,6 +123,8 @@ class Simulation:
         costs = 0   # Technical costs
         icosts = 0   # Ideal technical costs
         dens = 0   # Additional density on the altitude
+        rpts = []
+        irpts = []
 
         for i in range(self.n):
             # Assembling and launch
@@ -132,11 +134,6 @@ class Simulation:
             # Get the satellite coverage as generator
             points = self.coverage(self.sat, self.lon[ts, i],
                                    self.lat[ts, i], self.acc)
-            revenue = 0
-            # Get the revenue for the coverage
-            for p in points:
-                revenue += self.money[int(p[0]/self.acc),
-                                      int(p[1]/self.acc)]*self.price
             # Check the satellite state for:
             # o -- operating
             # i -- interrupted
@@ -144,9 +141,9 @@ class Simulation:
             # f -- failed
             # n -- not working
             if self.states[ts, i] == 'o':
+                rpts.extend(points)
                 costs += self.sat.operational_cost/2592000*self.step
                 cov += self.sat.coverage
-                rev += revenue*m[ts]
             elif self.states[ts, i] == 'i':
                 costs += self.strat.replacement_cost
                 costs += self.strat.day_cost/86400*self.step
@@ -155,10 +152,18 @@ class Simulation:
             elif self.states[ts, i] == 'f':
                 dens += self.sat.vol
 
-            irev += revenue*m[ts]
+            irpts.extend(points)
             icosts += self.sat.operational_cost/2592000*self.step
+
+        # Get the revenue for the coverage
+        for p in set(rpts):
+            rev += self.money[int(p[0]/self.acc),
+                              int(p[1]/self.acc)]*self.price
+        for p in set(irpts):
+            irev += self.money[int(p[0]/self.acc),
+                               int(p[1]/self.acc)]*self.price
         # Output array
-        return [ts, cov, rev, irev, costs, icosts, dens]
+        return [ts, cov, rev*m[ts], irev*m[ts], costs, icosts, dens]
 
     def export(self, *args):
         # Take the array to be exported, or nothing

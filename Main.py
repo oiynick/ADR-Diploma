@@ -2,6 +2,7 @@ import Classes
 import numpy as np
 import os
 import tqdm
+from time import time as t
 import multiprocessing as mp
 from datetime import datetime as dt
 
@@ -34,6 +35,13 @@ sim = Classes.Simulation(mass, vol, 40, alt, 0.075,
 
 print('Prepared for simulation in {}'.format(dt.now().strftime("%H:%M:%S")))
 
+# Time measurements for one step of simulation
+# =============================================================================
+# start = t()
+# res = sim.step_sim(steps-1)
+# print('One siulation step takes {} seconds'.format(t() - start))
+# np.savetxt('./Output/states.txt', sim.states, fmt='%s')
+# =============================================================================
 if __name__ == '__main__':
     cpus = os.cpu_count()
     pl = mp.Pool()   # Create the pool object
