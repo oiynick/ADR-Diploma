@@ -1,9 +1,17 @@
-import Classes
 import numpy as np
-import os
-import tqdm
-from time import time as t
+
+# Custom classes
+import Classes
+
+# Multiprocessing tools
 import multiprocessing as mp
+import os
+
+# Progress bar package
+import tqdm
+
+# Timing packages
+from time import time as t
 from datetime import datetime as dt
 
 print('Starting time is {}'.format(dt.now().strftime("%H:%M:%S")))

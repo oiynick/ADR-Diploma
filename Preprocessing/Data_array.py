@@ -85,14 +85,13 @@ def country_data():
         rows = sum(1 for i in rd_0)
     # Open the file for reading
     with open('../Raw_data/countries.csv', 'r') as hh:
-        i = 0
         rd_0 = csv.reader(hh)
         data = np.empty((3, rows), dtype='object')
-        for row in rd_0:
+        for i, row in enumerate(rd_0):
             data[0, i] = str(row[0]).lower()   # Read the country code
             data[1, i] = float(row[1])   # Read the hh size
             data[2, i] = float(row[2])   # Read the sharing capacity
-            i += 1
+            data[3, i] = float(row[3])   # Read the Gb ave price
     return data
 
 
