@@ -25,14 +25,14 @@ vol = 0.1   # M3
 alt = 1000   # km
 
 # Constellation parameters
-n = int(1000)
+n = int(1600)
 
 # Spare strategy
 strat = 'none'
 
 # Simulation parameters
 step = int(100)   # seconds
-simtime = int(2592100)   # seconds
+simtime = int(31536100)   # seconds
 tss = int(simtime/step)
 
 # CREATE A NEW INSTANCE OF SIMULATION

@@ -51,9 +51,9 @@ class Simulation:
 
         # Upload files longitude, latitude of the undersat point on the Earth
         # money is for money grid, lifetime is for array of lifetimes
-        self.lon = np.loadtxt('./PP_Data/lon.txt').T
-        self.lat = np.loadtxt('./PP_Data/lat.txt').T
-        self.money = np.loadtxt('./PP_Data/data.txt')
+        self.lon = np.loadtxt('./PP_Data/lon12.txt').T
+        self.lat = np.loadtxt('./PP_Data/lat12.txt').T
+        self.money = np.loadtxt('./PP_Data/marketing_vals.txt')
         self.states = self.status()
 
     def status(self):
@@ -115,7 +115,7 @@ class Simulation:
     def step_sim(self, ts):
         # CACLULATING A STEP OF SIMULATION
         # TODO: take market real numbers for trend
-        m = Trend('lin', 0.0005, 0.15, 155520, 1)   # Trend object
+        m = Trend('poly05', 0, 0.15, 946080, 1)   # Trend object
         # Reset the parameters
         cov = 0   # Coverage
         rev = 0   # Overall revenue

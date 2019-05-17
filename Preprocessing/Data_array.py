@@ -86,12 +86,14 @@ def country_data():
     # Open the file for reading
     with open('../Raw_data/countries.csv', 'r') as hh:
         rd_0 = csv.reader(hh)
-        data = np.empty((3, rows), dtype='object')
+        data = np.empty((5, rows), dtype='object')
         for i, row in enumerate(rd_0):
-            data[0, i] = str(row[0]).lower()   # Read the country code
-            data[1, i] = float(row[1])   # Read the hh size
-            data[2, i] = float(row[2])   # Read the sharing capacity
-            data[3, i] = float(row[3])   # Read the Gb ave price
+            if i > 0:
+                data[0, i] = str(row[0]).lower()   # Read the country code
+                data[1, i] = float(row[1])   # Read the hh size
+                data[2, i] = float(row[3])   # Read the Gb ave price
+                data[3, i] = float(row[4])   # Read the average consumption
+                data[4, i] = 0.7
     return data
 
 
@@ -130,7 +132,7 @@ def static(pop, countries, c_data, rp_data, price, inter):
     # rp_data - array of rich-poor curve data grid
     # price - service estimation price
     # inter - percentage of income spent on internet
-    data = np.empty((360, 180))
+    cash_data = np.empty((360, 180))
 
     for i in range(360):
         for j in range(180):
@@ -140,22 +142,21 @@ def static(pop, countries, c_data, rp_data, price, inter):
                 # TODO: rich-poor name has to be okay
                 # Find the data for rich-poor by the country code
                 rp_i = np.where(rp_data == 'oth')
-                # Interp it depending on the price given
-                rp = 1 - smart_interp(rp_data[1, rp_i[1]][0],
-                                      price*12/inter)/100
                 # Find the data for households bu the country code
                 cd_i = np.where(c_data == name)
-
                 # If there's no data for country, take the generic one
                 if ~isinstance(cd_i, int):
                     cd_i = np.where(c_data == 'oth')
-                # Calculate the koef based on the c-related data
-                kef = c_data[1, cd_i[1]] / c_data[2, cd_i[1]]
+                # Calculate the average price of the internet
+                price = c_data[2, cd_i[1]] * c_data[3, cd_i[1]]
+                # Interp it depending on the price given
+                rp = 1 - smart_interp(rp_data[1, rp_i[1]][0],
+                                      price*12/inter)/100
                 # Assign the data to the cell
-                data[i, j] = pop[i, j]*rp/kef*100
+                cash_data[i, j] = pop[i, j]*rp*price*c_data[4, cd_i[1]]
             else:
-                data[i, j] = 0
-    return data
+                cash_data[i, j] = 0
+    return cash_data
 
 
 # Generate an array of the population based on the .asc file

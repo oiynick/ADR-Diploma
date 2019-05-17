@@ -1,198 +1,198 @@
-CODE,HH SIZE,SHARING,NAME,DATA YEAR,AVE TRAFFIC,AVE PRICE
-AFG,7.4,1,Afghanistan,2011,,1.60
-ATG,2.8,1,Antigua and Barbuda,2011,,11.71
-AIA,2.8,1,Anguilla,2011,,14.90
-ALB,3.9,1,Albania,2011,,3.22
-ARM,3.8,1,Armenia,2011,,1.65
-ARG,3.3,1,Argentina,2010,,3.05
-ASM,5.6,1,American Samoa,2010,,4.97
-AUT,2.3,1,Austria,2011,,1.88
-AUS,2.5,1,Australia,2011,,2.47
-ABW,2.9,1,Aruba,2010,,12.70
-AX,2.1,1,Åland Islands,2010,,3.10
-AZE,4.5,1,Azerbaijan,2009,,2.69
-BIH,3.1,1,Bosnia and Herzegovina,2004,,3.58
-BRB,2.9,1,Barbados,2010,,7.21
-BGD,4.5,1,Bangladesh,2014,,0.99
-BEL,2.3,1,Belgium,2011,,12.30
-BFA,5.7,1,Burkina Faso,2010,,4.69
-BGR,2.3,1,Bulgaria,2011,,7.15
-BHR,5.9,1,Bahrain,2010,,2.83
-BDI,4.8,1,Burundi,2010,,2.00
-BEN,5,1,Benin,2011,,20.99
-BMU,2.3,1,Bermuda,2010,,37.74
-BOL,3.5,1,Bolivia (Plurinational State of),2012,,8.51
-BRA,3.3,1,Brazil,2010,,3.50
-BHS,3.4,1,Bahamas,2010,,6.89
-BTN,4.5,1,Bhutan,2012,,1.25
-BW,3.7,1,Botswana,2011,,14.12
-BLR,2.4,1,Belarus,2009,,2.36
-BLZ,4.1,1,Belize,2010,,4.57
-CAN,2.3,1,Canada,2016,,12.02
-COD,5.3,1,Congo (Democratic Republic of the),2013,,0.88
-CAF,4.9,1,Central African Republic,1994,,6.03
-COG,4.3,1,Congo,2011,,5.63
-CHE,2.2,1,Switzerland,2000,,20.22
-CIV,5.4,1,Côte d'Ivoire,2014,,4.10
-CHL,3.6,1,Chile,2002,,1.87
-CMR,5.2,1,Cameroon,2005,,1.71
-CHN,3.1,1,China,2010,,9.89
-COL,3.5,1,Colombia,2015,,5.28
-CRI,3.5,1,Costa Rica,2011,,5.04
-CUB,3.2,1,Cuba,2002,,12.58
-CPV,4.2,1,Cabo Verde,2010,,4.25
-CUW,2.7,1,Curaçao,2011,,12.42
-CYP,2.8,1,Cyprus,2011,,20.25
-CZE,2.3,1,Czechia,2011,,4.91
-DEU,2.1,1,Germany,2011,,6.96
-DNK,2.1,1,Denmark,2017,,1.36
-DMA,2.7,1,Dominica,2011,,14.60
-DOM,3.5,1,Dominican Republic,2013,,1.88
-DZA,5.9,1,Algeria,2011,,5.15
-ECU,3.8,1,Ecuador,2010,,6.93
-EST,2.3,1,Estonia,2011,,3.67
-EGY,4.1,1,Egypt,2014,,1.49
-ESP,2.6,1,Spain,2011,,3.79
-ETH,4.6,1,Ethiopia,2011,,2.91
-FIN,2.1,1,Finland,2010,,1.16
-FIJ,4.8,1,Fiji,2007,,3.57
-FSM,6,1,Micronesia (Federated States of),2010,,12.87
-FRA,2.3,1,France,2011,,2.99
-GAB,4.1,1,Gabon,2013,,5.84
-GBR,2.3,1,United Kingdom of Great Britain and Northern Ireland,2011,,6.66
-GRD,3,1,Grenada,2012,,11.56
-GEO,3.4,1,Georgia,2002,,3.33
-GHA,3.5,1,Ghana,2014,,1.56
-GIB,2.7,1,Gibraltar,2012,,12.82
-GMB,8.2,1,Gambia,2013,,5.33
-GIN,7.2,1,Guinea,2014,,1.94
-GNQ,4.7,1,Equatorial Guinea,2015,,4.96
-GRC,2.4,1,Greece,2011,,32.71
-GTM,4.8,1,Guatemala,2014,,4.53
-GUM,3.7,1,Guam,2010,,12.97
-GUY,3.8,1,Guyana,2009,,7.24
-HKG,2.9,1,Hong Kong,2011,,4.00
-HND,3.9,1,Honduras,2013,,5.02
-HRV,2.8,1,Croatia,2011,,4.89
-HTI,4.4,1,Haiti,2012,,7.91
-HUN,2.4,1,Hungary,2011,,6.56
-IDN,4,1,Indonesia,2012,,1.21
-IRL,2.7,1,Ireland,2011,,3.95
-ISR,3.1,1,Israel,2008,,0.90
-IND,4.8,1,India,2011,,0.26
-IRQ,7.7,1,Iraq,1997,,8.00
-IRN,3.5,1,Iran (Islamic Republic of),2011,,1.28
-ISL,2.6,1,Iceland,2011,,3.78
-ITA,2.4,1,Italy,2011,,1.73
-JAM,3.1,1,Jamaica,2011,,4.64
-JOR,4.8,1,Jordan,2015,,1.79
-JPN,2.4,1,Japan,2015,,8.34
-KEN,3.9,1,Kenya,2014,,2.73
-KGZ,4.2,1,Kyrgyzstan,2012,,0.27
-KHM,4.6,1,Cambodia,2014,,1.49
-KIR,6,1,Kiribati,2015,,11.05
-COM,5.4,1,Comoros,2012,,12.57
-PRK,3.9,1,Korea (Democratic People's Republic of),2008,,8.53
-KOR,2.5,1,Korea (Republic of),2015,,15.12
-KWT,5.8,1,Kuwait,2011,,2.01
-KAZ,3.5,1,Kazakhstan,2009,,0.49
-LAO,5.3,1,Lao People's Democratic Republic,2015,,3.42
-LBN,4.3,1,Lebanon,2004,,9.21
-LCA,2.8,1,Saint Lucia,2010,,9.78
-LIE,2.3,1,Liechtenstein,2010,,13.95
-LKA,3.8,1,Sri Lanka,2011,,0.78
-LBR,5,1,Liberia,2013,,3.75
-LSO,3.3,1,Lesotho,2014,,2.43
-LTU,2.4,1,Lithuania,2011,,2.06
-LUX,2.4,1,Luxembourg,2011,,4.39
-LVA,2.4,1,Latvia,2011,,7.12
-LBY,5.6,1,Libya,2006,,4.87
-MAR,4.6,1,Morocco,2014,,1.66
-MCO,1.9,1,Monaco,2008,,1.21
-MDA,2.8,1,Moldova (Republic of),2005,,2.82
-MNE,3.2,1,Montenegro,2011,,4.26
-MDG,4.7,1,Madagascar,2008,,3.39
-MHL,6.9,1,Marshall Islands,2011,,8.53
-MKD,3.6,1,Macedonia (the former Yugoslav Republic of),2002,,3.62
-MLI,5.7,1,Mali,2012,,9.22
-MMR,4.2,1,Myanmar,2015,,0.87
-MNG,3.6,1,Mongolia,2009,,0.82
-MNP,3.3,1,Northern Mariana Islands,2010,,5.99
-MRT,6.1,1,Mauritania,2013,,3.12
-MSR,2,1,Montserrat,2011,,14.61
-MLT,2.7,1,Malta,2011,,18.79
-MDV,5.2,1,Maldives,2014,,5.27
-MWI,4.5,1,Malawi,2015,,3.59
-MEX,3.7,1,Mexico,2015,,7.38
-MYS,4.6,1,Malaysia,2000,,1.18
-MOZ,4.4,1,Mozambique,2011,,15.82
-NAM,4.4,1,Namibia,2011,,11.02
-NER,7.1,1,Niger,2002,,2.92
-NGA,4.6,1,Nigeria,2013,,2.22
-NIC,5.2,1,Nicaragua,2005,,6.04
-NLD,2.3,1,Netherlands,2011,,7.99
-NOR,2.2,1,Norway,2011,,13.21
-NPL,4.4,1,Nepal,2011,,2.25
-NRU,6,1,Nauru,2011,,28.13
-NIU,3.1,1,Niue,2011,,9.20
-NZL,2.7,1,New Zealand,2011,,9.79
-OMN,8,1,Oman,2003,,11.28
-OTH,3.4,1,Others,2020,,8.53
-PAN,3.7,1,Panama,2010,,5.56
-PER,3.8,1,Peru,2012,,2.48
-PNG,5.3,1,Papua New Guinea,2011,,11.51
-PHL,4.7,1,Philippines,2013,,3.16
-PAK,6.8,1,Pakistan,2012,,1.85
-POL,2.8,1,Poland,2011,,1.32
-PRI,2.7,1,Puerto Rico,2010,,11.12
-PSX,5.9,1,"Palestine, State of",2007,,2.06
-PRT,2.6,1,Portugal,2011,,13.98
-PRY,4.6,1,Paraguay,2002,,6.18
-QAT,5.3,1,Qatar,2010,,4.62
-ROU,2.7,1,Romania,2011,,1.89
-SRB,2.9,1,Serbia,2011,,4.83
-RUS,2.6,1,Russian Federation,2010,,0.91
-RWA,4.3,1,Rwanda,2014,,0.56
-SAU,5.6,1,Saudi Arabia,2010,,5.62
-SLB,5.5,1,Solomon Islands,2009,,8.37
-SYC,3.8,1,Seychelles,2002,,19.55
-SDN,5.6,1,Sudan,2008,,0.68
-SWE,2.2,1,Sweden,2015,,3.66
-SGP,3.3,1,Singapore,2010,,3.67
-SVN,2.5,1,Slovenia,2011,,2.21
-SVK,2.9,1,Slovakia,2011,,5.56
-SLE,5.6,1,Sierra Leone,2015,,5.79
-SEN,8.3,1,Senegal,2015,,3.28
-SOM,5.9,1,Somalia,2014,,6.19
-SUR,3.9,1,Suriname,2004,,6.08
-SDS,5.9,1,South Sudan,2008,,0.68
-STP,4,1,Sao Tome and Principe,2012,,5.33
-SLV,4.1,1,El Salvador,2007,,4.55
-SXM,2.6,1,Sint Maarten (Dutch part),2011,,4.92
-TCA,3,1,Turks and Caicos Islands,2012,,23.09
-TCD,5.8,1,Chad,2014,,23.33
-TGO,4.6,1,Togo,2013,,11.76
-THA,3.7,1,Thailand,2000,,2.78
-TJK,6.3,1,Tajikistan,2012,,4.84
-TLS,5.8,1,Timor-Leste,2009,,4.48
-TUN,4,1,Tunisia,2014,,2.87
-TON,5.7,1,Tonga,2011,,25.52
-TUR,4.1,1,Turkey,2003,,2.25
-TTO,3.3,1,Trinidad and Tobago,2011,,17.10
-TUV,6,1,Tuvalu,2002,,8.53
-TZA,4.9,1,"Tanzania, United Republic of",2015,,5.93
-UKR,2.5,1,Ukraine,2007,,0.51
-UGA,4.7,1,Uganda,2014,,4.69
-USA,2.6,1,United States of America,2010,,12.37
-URY,2.8,1,Uruguay,2011,,2.80
-UZB,5.2,1,Uzbekistan,1996,,3.27
-VCT,3,1,Saint Vincent and the Grenadines,2012,,12.00
-VEN,3.3,1,Venezuela (Bolivarian Republic of),2011,,8.53
-VGB,2.4,1,Virgin Islands (British),2010,,18.55
-VIR,2.4,1,Virgin Islands (U.S.),2010,,13.10
-VNM,3.8,1,Viet Nam,2011,,1.31
-VUT,4.8,1,Vanuatu,2009,,4.94
-YEM,6.7,1,Yemen,2013,,15.73
-ZAF,3.2,1,South Africa,2011,,7.19
-ZMB,5.1,1,Zambia,2013,,2.25
-ZWE,4.1,1,Zimbabwe,2015,,75.20
+CODE,HH SIZE,NAME,AVE PRICE,AVE TRAFFIC
+AFG,7.4,Afghanistan,1.6,7.6
+ATG,2.8,Antigua and Barbuda,11.71,10.8
+AIA,2.8,Anguilla,14.9,21.2
+ALB,3.9,Albania,3.22,7.6
+ARM,3.8,Armenia,1.65,7.6
+ARG,3.3,Argentina,3.05,7.6
+ASM,5.6,American Samoa,4.97,7.6
+AUT,2.3,Austria,1.88,21.2
+AUS,2.5,Australia,2.47,7.6
+ABW,2.9,Aruba,12.7,7.6
+AX,2.1,Åland Islands,3.1,7.6
+AZE,4.5,Azerbaijan,2.69,7.6
+BIH,3.1,Bosnia and Herzegovina,3.58,21.2
+BRB,2.9,Barbados,7.21,7.6
+BGD,4.5,Bangladesh,0.99,7.6
+BEL,2.3,Belgium,12.3,21.2
+BFA,5.7,Burkina Faso,4.69,7.6
+BGR,2.3,Bulgaria,7.15,21.2
+BHR,5.9,Bahrain,2.83,7.6
+BDI,4.8,Burundi,2,7.6
+BEN,5,Benin,20.99,7.6
+BMU,2.3,Bermuda,37.74,7.6
+BOL,3.5,Bolivia (Plurinational State of),8.51,7.6
+BRA,3.3,Brazil,3.5,7.6
+BHS,3.4,Bahamas,6.89,7.6
+BTN,4.5,Bhutan,1.25,7.6
+BW,3.7,Botswana,14.12,7.6
+BLR,2.4,Belarus,2.36,15.6
+BLZ,4.1,Belize,4.57,7.6
+CAN,2.3,Canada,12.02,46
+COD,5.3,Congo (Democratic Republic of the),0.88,7.6
+CAF,4.9,Central African Republic,6.03,7.6
+COG,4.3,Congo,5.63,7.6
+CHE,2.2,Switzerland,20.22,21.2
+CIV,5.4,Côte d'Ivoire,4.1,7.6
+CHL,3.6,Chile,1.87,7.6
+CMR,5.2,Cameroon,1.71,7.6
+CHN,3.1,China,9.89,10.8
+COL,3.5,Colombia,5.28,7.6
+CRI,3.5,Costa Rica,5.04,7.6
+CUB,3.2,Cuba,12.58,7.6
+CPV,4.2,Cabo Verde,4.25,7.6
+CUW,2.7,Curaçao,12.42,7.6
+CYP,2.8,Cyprus,20.25,15.6
+CZE,2.3,Czechia,4.91,15.6
+DEU,2.1,Germany,6.96,21.2
+DNK,2.1,Denmark,1.36,21.2
+DMA,2.7,Dominica,14.6,7.6
+DOM,3.5,Dominican Republic,1.88,7.6
+DZA,5.9,Algeria,5.15,7.6
+ECU,3.8,Ecuador,6.93,7.6
+EST,2.3,Estonia,3.67,15.6
+EGY,4.1,Egypt,1.49,7.6
+ESP,2.6,Spain,3.79,15.6
+ETH,4.6,Ethiopia,2.91,7.6
+FIN,2.1,Finland,1.16,46
+FIJ,4.8,Fiji,3.57,7.6
+FSM,6,Micronesia (Federated States of),12.87,7.6
+FRA,2.3,France,2.99,21.2
+GAB,4.1,Gabon,5.84,7.6
+GBR,2.3,United Kingdom of Great Britain and Northern Ireland,6.66,21.2
+GRD,3,Grenada,11.56,7.6
+GEO,3.4,Georgia,3.33,7.6
+GHA,3.5,Ghana,1.56,7.6
+GIB,2.7,Gibraltar,12.82,7.6
+GMB,8.2,Gambia,5.33,7.6
+GIN,7.2,Guinea,1.94,7.6
+GNQ,4.7,Equatorial Guinea,4.96,7.6
+GRC,2.4,Greece,32.71,15.6
+GTM,4.8,Guatemala,4.53,7.6
+GUM,3.7,Guam,12.97,7.6
+GUY,3.8,Guyana,7.24,7.6
+HKG,2.9,Hong Kong,4,10.8
+HND,3.9,Honduras,5.02,7.6
+HRV,2.8,Croatia,4.89,15.6
+HTI,4.4,Haiti,7.91,7.6
+HUN,2.4,Hungary,6.56,15.6
+IDN,4,Indonesia,1.21,10.8
+IRL,2.7,Ireland,3.95,15.6
+ISR,3.1,Israel,0.9,10.8
+IND,4.8,India,0.26,10.8
+IRQ,7.7,Iraq,8,10.8
+IRN,3.5,Iran (Islamic Republic of),1.28,10.8
+ISL,2.6,Iceland,3.78,21.2
+ITA,2.4,Italy,1.73,15.6
+JAM,3.1,Jamaica,4.64,7.6
+JOR,4.8,Jordan,1.79,7.6
+JPN,2.4,Japan,8.34,21.2
+KEN,3.9,Kenya,2.73,7.6
+KGZ,4.2,Kyrgyzstan,0.27,7.6
+KHM,4.6,Cambodia,1.49,7.6
+KIR,6,Kiribati,11.05,7.6
+COM,5.4,Comoros,12.57,7.6
+PRK,3.9,Korea (Democratic People's Republic of),8.53,10.8
+KOR,2.5,Korea (Republic of),15.12,10.8
+KWT,5.8,Kuwait,2.01,7.6
+KAZ,3.5,Kazakhstan,0.49,10.8
+LAO,5.3,Lao People's Democratic Republic,3.42,10.8
+LBN,4.3,Lebanon,9.21,7.6
+LCA,2.8,Saint Lucia,9.78,7.6
+LIE,2.3,Liechtenstein,13.95,15.6
+LKA,3.8,Sri Lanka,0.78,10.8
+LBR,5,Liberia,3.75,7.6
+LSO,3.3,Lesotho,2.43,7.6
+LTU,2.4,Lithuania,2.06,21.2
+LUX,2.4,Luxembourg,4.39,21.2
+LVA,2.4,Latvia,7.12,21.2
+LBY,5.6,Libya,4.87,7.6
+MAR,4.6,Morocco,1.66,7.6
+MCO,1.9,Monaco,1.21,21.2
+MDA,2.8,Moldova (Republic of),2.82,15.6
+MNE,3.2,Montenegro,4.26,15.6
+MDG,4.7,Madagascar,3.39,7.6
+MHL,6.9,Marshall Islands,8.53,7.6
+MKD,3.6,Macedonia (the former Yugoslav Republic of),3.62,7.6
+MLI,5.7,Mali,9.22,7.6
+MMR,4.2,Myanmar,0.87,7.6
+MNG,3.6,Mongolia,0.82,15.6
+MNP,3.3,Northern Mariana Islands,5.99,7.6
+MRT,6.1,Mauritania,3.12,7.6
+MSR,2,Montserrat,14.61,7.6
+MLT,2.7,Malta,18.79,7.6
+MDV,5.2,Maldives,5.27,7.6
+MWI,4.5,Malawi,3.59,7.6
+MEX,3.7,Mexico,7.38,7.6
+MYS,4.6,Malaysia,1.18,10.8
+MOZ,4.4,Mozambique,15.82,7.6
+NAM,4.4,Namibia,11.02,7.6
+NER,7.1,Niger,2.92,7.6
+NGA,4.6,Nigeria,2.22,7.6
+NIC,5.2,Nicaragua,6.04,7.6
+NLD,2.3,Netherlands,7.99,21.2
+NOR,2.2,Norway,13.21,21.2
+NPL,4.4,Nepal,2.25,7.6
+NRU,6,Nauru,28.13,7.6
+NIU,3.1,Niue,9.2,7.6
+NZL,2.7,New Zealand,9.79,21.2
+OMN,8,Oman,11.28,10.8
+OTH,3.4,Others,8.53,18
+PAN,3.7,Panama,5.56,7.6
+PER,3.8,Peru,2.48,7.6
+PNG,5.3,Papua New Guinea,11.51,7.6
+PHL,4.7,Philippines,3.16,7.6
+PAK,6.8,Pakistan,1.85,7.6
+POL,2.8,Poland,1.32,15.6
+PRI,2.7,Puerto Rico,11.12,7.6
+PSX,5.9,"Palestine, State of",2.06,7.6
+PRT,2.6,Portugal,13.98,15.6
+PRY,4.6,Paraguay,6.18,7.6
+QAT,5.3,Qatar,4.62,10.8
+ROU,2.7,Romania,1.89,15.6
+SRB,2.9,Serbia,4.83,21.2
+RUS,2.6,Russian Federation,0.91,21.2
+RWA,4.3,Rwanda,0.56,7.6
+SAU,5.6,Saudi Arabia,5.62,7.6
+SLB,5.5,Solomon Islands,8.37,7.6
+SYC,3.8,Seychelles,19.55,7.6
+SDN,5.6,Sudan,0.68,7.6
+SWE,2.2,Sweden,3.66,21.2
+SGP,3.3,Singapore,3.67,10.8
+SVN,2.5,Slovenia,2.21,15.6
+SVK,2.9,Slovakia,5.56,15.6
+SLE,5.6,Sierra Leone,5.79,7.6
+SEN,8.3,Senegal,3.28,10.8
+SOM,5.9,Somalia,6.19,7.6
+SUR,3.9,Suriname,6.08,7.6
+SDS,5.9,South Sudan,0.68,7.6
+STP,4,Sao Tome and Principe,5.33,7.6
+SLV,4.1,El Salvador,4.55,7.6
+SXM,2.6,Sint Maarten (Dutch part),4.92,7.6
+TCA,3,Turks and Caicos Islands,23.09,7.6
+TCD,5.8,Chad,23.33,7.6
+TGO,4.6,Togo,11.76,7.6
+THA,3.7,Thailand,2.78,10.8
+TJK,6.3,Tajikistan,4.84,7.6
+TLS,5.8,Timor-Leste,4.48,7.6
+TUN,4,Tunisia,2.87,7.6
+TON,5.7,Tonga,25.52,7.6
+TUR,4.1,Turkey,2.25,15.6
+TTO,3.3,Trinidad and Tobago,17.1,7.6
+TUV,6,Tuvalu,8.53,7.6
+TZA,4.9,"Tanzania, United Republic of",5.93,7.6
+UKR,2.5,Ukraine,0.51,21.2
+UGA,4.7,Uganda,4.69,7.6
+USA,2.6,United States of America,12.37,46
+URY,2.8,Uruguay,2.8,7.6
+UZB,5.2,Uzbekistan,3.27,7.6
+VCT,3,Saint Vincent and the Grenadines,12,7.6
+VEN,3.3,Venezuela (Bolivarian Republic of),8.53,7.6
+VGB,2.4,Virgin Islands (British),18.55,7.6
+VIR,2.4,Virgin Islands (U.S.),13.1,7.6
+VNM,3.8,Viet Nam,1.31,10.8
+VUT,4.8,Vanuatu,4.94,7.6
+YEM,6.7,Yemen,15.73,7.6
+ZAF,3.2,South Africa,7.19,7.6
+ZMB,5.1,Zambia,2.25,7.6
+ZWE,4.1,Zimbabwe,75.2,7.6
