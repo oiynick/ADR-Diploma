@@ -1,4 +1,5 @@
 import numpy as np
+import pickle
 
 # Custom classes
 import Classes
@@ -13,6 +14,20 @@ import tqdm
 # Timing packages
 from time import time as t
 from datetime import datetime as dt
+
+
+def time_mes(sim, step, size, ranges):
+    sim.step = step
+    start = t()
+    try:
+        for i in range(ranges):
+            sim.step_sim(step)
+    except BaseException:
+        raise Exception('Something went wrong')
+    else:
+        print('One step takes {}s'.format(t() - start))
+        return t() - start
+
 
 print('Starting time is {}'.format(dt.now().strftime("%H:%M:%S")))
 # Boundary conditions
@@ -43,12 +58,19 @@ sim = Classes.Simulation(mass, vol, 40, alt, 0.075,
 
 print('Prepared for simulation in {}'.format(dt.now().strftime("%H:%M:%S")))
 
+# Pickling data to the files uncomment if any changes made
+# =============================================================================
+# with open('./PP_Data/lon12.data', 'wb') as f:
+#     pickle.dump(sim.lon, f)
+# with open('./PP_Data/lat12.data', 'wb') as f:
+#     pickle.dump(sim.lat, f)
+# with open('./PP_Data/market.data', 'wb') as f:
+#     pickle.dump(sim.money, f)
+# =============================================================================
+
 # Time measurements for one step of simulation
 # =============================================================================
-# start = t()
-# res = sim.step_sim(steps-1)
-# print('One siulation step takes {} seconds'.format(t() - start))
-# np.savetxt('./Output/states.txt', sim.states, fmt='%s')
+# time = time_mes(sim, 20, step, 1)
 # =============================================================================
 if __name__ == '__main__':
     cpus = os.cpu_count()

@@ -1,4 +1,5 @@
 import numpy as np
+import pickle
 from numpy.random import choice as rnd
 # from time import time as tt
 import datetime as dt
@@ -51,9 +52,12 @@ class Simulation:
 
         # Upload files longitude, latitude of the undersat point on the Earth
         # money is for money grid, lifetime is for array of lifetimes
-        self.lon = np.loadtxt('./PP_Data/lon12.txt').T
-        self.lat = np.loadtxt('./PP_Data/lat12.txt').T
-        self.money = np.loadtxt('./PP_Data/marketing_vals.txt')
+        with open('./PP_Data/lon12.data', 'rb') as f:
+            self.lon = pickle.load(f)
+        with open('./PP_Data/lat12.data', 'rb') as f:
+            self.lat = pickle.load(f)
+        with open('./PP_Data/market.data', 'rb') as f:
+            self.money = pickle.load(f)
         self.states = self.status()
 
     def status(self):

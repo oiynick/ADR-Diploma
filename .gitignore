@@ -8,3 +8,4 @@ PP_Data/lat.txt
 PP_Data/lon.txt
 PP_Data/lat12.txt
 PP_Data/lon12.txt
+*.data
