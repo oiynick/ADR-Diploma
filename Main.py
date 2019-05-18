@@ -80,7 +80,7 @@ if __name__ == '__main__':
     data = []
     # Create a proress bar
     for i in tqdm.tqdm(pl.imap_unordered(sim.step_sim, args,
-                                         int(tss/(2*cpus) + 1)), total=tss):
+                                         int(tss/(100*cpus) + 1)), total=tss):
         data.append(i)
 
     # Close & join the pool to commit the operations on multiprocessing
