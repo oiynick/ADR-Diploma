@@ -1,5 +1,7 @@
 import numpy as np
-import pickle
+import os
+import _pickle as pickle
+from time import time as t
 from numpy.random import choice as rnd
 # from time import time as tt
 import datetime as dt
@@ -16,12 +18,11 @@ class Simulation:
     # The class bringing the simulation object
 
     def __init__(self, mass, volume, alfa, alt, cov,   # Sat
-                 n: int, price: float,   # Constellation and service
+                 n: int,   # Constellation and service
                  strat: str,   # Classes
                  simtime: int, step: int, acc: float):   # Simulation
         '''
         price -- service price estimation
-        TODO: to be changed for model
         alt -- satellites altitude
         volume -- satellite volume
         lams -- lambdas for Weibull
@@ -47,18 +48,20 @@ class Simulation:
 
         # Spare strategy
         self.strat = Strategy(strat, self.sat, 0)
-        # Price of the flat-service per step
-        self.price = price/2592000*step
 
         # Upload files longitude, latitude of the undersat point on the Earth
         # money is for money grid, lifetime is for array of lifetimes
-        with open('./PP_Data/lon12.data', 'rb') as f:
-            self.lon = pickle.load(f)
-        with open('./PP_Data/lat12.data', 'rb') as f:
-            self.lat = pickle.load(f)
+# =============================================================================
+#         with open('./PP_Data/lon12.data', 'rb') as f:
+#             self.lon = pickle.load(f)
+#         with open('./PP_Data/lat12.data', 'rb') as f:
+#             self.lat = pickle.load(f)
+# =============================================================================
         with open('./PP_Data/market.data', 'rb') as f:
             self.money = pickle.load(f)
+        st = t()
         self.states = self.status()
+        print('States array took {}s'.format(t() - st))
 
     def status(self):
         # Upload the matrix of the probabilities
@@ -118,7 +121,6 @@ class Simulation:
 
     def step_sim(self, ts):
         # CACLULATING A STEP OF SIMULATION
-        # TODO: take market real numbers for trend
         m = Trend('poly05', 0, 0.15, 946080, 1)   # Trend object
         # Reset the parameters
         cov = 0   # Coverage
@@ -130,14 +132,19 @@ class Simulation:
         rpts = []
         irpts = []
 
+        # Upload the right files with a lons and lats
+        num = ts // 500
+        with open('./PP_Data/D/{}'.format(num*500), 'rb', os.O_NONBLOCK) as f:
+            d = pickle.load(f)
+
         for i in range(self.n):
             # Assembling and launch
             if ts == 0:
                 costs += self.sat.launch_cost + self.sat.cost
 
             # Get the satellite coverage as generator
-            points = self.coverage(self.sat, self.lon[ts, i],
-                                   self.lat[ts, i], self.acc)
+            points = self.coverage(self.sat, d[ts - num*500, i, 1],
+                                   d[ts - num*500, i, 0], self.acc)
             # Check the satellite state for:
             # o -- operating
             # i -- interrupted
@@ -162,10 +169,10 @@ class Simulation:
         # Get the revenue for the coverage
         for p in set(rpts):
             rev += self.money[int(p[0]/self.acc),
-                              int(p[1]/self.acc)]*self.price
+                              int(p[1]/self.acc)]
         for p in set(irpts):
             irev += self.money[int(p[0]/self.acc),
-                               int(p[1]/self.acc)]*self.price
+                               int(p[1]/self.acc)]
         # Output array
         return [ts, cov, rev*m[ts], irev*m[ts], costs, icosts, dens]
 

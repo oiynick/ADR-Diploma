@@ -2,6 +2,7 @@ import numpy as np
 import csv
 from aeronet import dataset as ds
 import shapely
+import pickle
 
 
 def smart_interp(array, value):
@@ -157,6 +158,29 @@ def static(pop, countries, c_data, rp_data, price, inter):
             else:
                 cash_data[i, j] = 0
     return cash_data
+
+
+def pickles(sim):
+    with open('./PP_Data/lon12.data', 'wb') as f:
+        pickle.dump(sim.lon, f)
+    with open('./PP_Data/lat12.data', 'wb') as f:
+        pickle.dump(sim.lat, f)
+    with open('./PP_Data/market.data', 'wb') as f:
+        pickle.dump(sim.money, f)
+
+
+def population_grid(sim):
+    lats = np.swapaxes(sim.lat, 0, 1)
+    lons = np.swapaxes(sim.lon, 0, 1)
+
+    data = np.stack((lats, lons), axis=2)
+
+    for i in range(data.shape[0]//500):
+        with open('./PP_Data/D/{}'.format(i*500), 'wb') as f:
+            pickle.dump(data[i*500:(i+1)*500, :, :], f)
+
+    with open('./PP_Data/D/{}'.format((i+1)*500), 'wb') as f:
+            pickle.dump(data[(i+1)*500:, :, :], f)
 
 
 # Generate an array of the population based on the .asc file
