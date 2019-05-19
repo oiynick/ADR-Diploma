@@ -2,6 +2,8 @@ import numpy as np
 
 # Custom classes
 import Classes
+from Classes.Helpers import Measurements as mes
+# Initiate the measurements class
 
 # Multiprocessing tools
 import multiprocessing as mp
@@ -15,17 +17,8 @@ from time import time as t
 from datetime import datetime as dt
 
 
-def time_mes(sim, step, size, ranges):
-    sim.step = step
-    start = t()
-    sim.step_sim(step)
-    print('One step takes {}s'.format(t() - start))
-    return t() - start
-
-
 print('Starting time is {}'.format(dt.now().strftime("%H:%M:%S")))
 # Boundary conditions
-
 # Satellite characteristics
 mass = 400   # Kgs dry mass
 vol = 0.1   # M3
@@ -50,10 +43,16 @@ sim = Classes.Simulation(mass, vol, 40, alt, 0.075,
 
 print('Prepared for simulation in {}'.format(dt.now().strftime("%H:%M:%S")))
 
-# Time measurements for one step of simulation
 # =============================================================================
-# time = time_mes(sim, 20, step, 1)
+# # Time measurements for one step of simulation
+# time = mes.time_mes(sim, 1)
 # =============================================================================
+
+# =============================================================================
+# # Selecting the best timestep
+# mes.step_selection(sim)
+# =============================================================================
+
 if __name__ == '__main__':
     cpus = os.cpu_count()
     pl = mp.Pool(cpus)   # Create the pool object
@@ -62,7 +61,7 @@ if __name__ == '__main__':
     data = []
     # Create a proress bar
     for i in tqdm.tqdm(pl.imap_unordered(sim.step_sim, args,
-                                         int(tss/(100*cpus) + 1)), total=tss):
+                                         int(tss/(4*cpus) + 1)), total=tss):
         data.append(i)
 
     # Close & join the pool to commit the operations on multiprocessing

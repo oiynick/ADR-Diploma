@@ -166,13 +166,15 @@ class Simulation:
             irpts.extend(points)
             icosts += self.sat.operational_cost/2592000*self.step
 
+        # Time-transferring coef
+        kt = self.step/2592000
         # Get the revenue for the coverage
         for p in set(rpts):
             rev += self.money[int(p[0]/self.acc),
-                              int(p[1]/self.acc)]
+                              int(p[1]/self.acc)]*kt
         for p in set(irpts):
             irev += self.money[int(p[0]/self.acc),
-                               int(p[1]/self.acc)]
+                               int(p[1]/self.acc)]*kt
         # Output array
         return [ts, cov, rev*m[ts], irev*m[ts], costs, icosts, dens]
 

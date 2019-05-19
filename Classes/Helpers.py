@@ -1,4 +1,5 @@
 import numpy as np
+from time import time as t
 
 
 class Strategy:
@@ -47,3 +48,63 @@ class Trend:
             return self.end
         else:
             return self.res(index)
+
+
+class Measurements:
+
+    def __init__(self):
+        pass
+
+    def step(sim, step):
+        sim.step = step
+        start = t()
+        sim.step_sim(step)
+        return t() - start
+
+    def step_selection(sim):
+        sim.step = 1
+        ideals = []
+
+        # Create an output array
+        results = np.zeros((6, 3))
+        start_time = t()
+
+        # Calculate the ideal numbers for comparison (step=1)
+        for i in range(1001):
+            if i != 0:
+                ideals.append(ideals[i-1] + sim.step_sim(i)[3])
+            else:
+                ideals.append(sim.step_sim(i)[3])
+
+        # Write down the timing results
+        results[0, 1] = t() - start_time
+        results[0, 0] = sim.step
+        results[0, 2] = 0
+
+        current = []
+        for i in range(1, 6):
+            sim.step = i*100
+            start_time = t()
+
+            # Run the sim with selected step in range of 1000
+            for j in range(0, int(1000/sim.step) + 1):
+                if j != 0:
+                    current.append(current[j-1] + sim.step_sim(j*sim.step)[3])
+                else:
+                    current.append(sim.step_sim(j*sim.step)[3])
+
+            # Write down the timing results
+            results[i, 1] = t() - start_time
+            results[i, 0] = sim.step
+
+            # Calculate the average deviation & write in the results array
+            summ = 0
+            for k in range(0, int(1000/sim.step) + 1):
+                ofi = k*sim.step
+                summ += np.abs(current[k] - ideals[ofi])/ideals[ofi]*100
+
+            results[i, 2] = summ/(k + 1)
+
+        # Export the results to the text file
+        np.savetxt('./Step_selection.csv', results, delimiter=',', fmt='%1.3f',
+                   header='step size (seconds), calc time(s), deviation (%)')
