@@ -99,8 +99,8 @@ class Measurements:
 
             # Calculate the average deviation & write in the results array
             summ = 0
-            for k in range(0, int(1000/sim.step) + 1):
-                ofi = k*sim.step
+            for k in range(1, int(1000/sim.step) + 1):
+                ofi = int(k*sim.step)
                 summ += np.abs(current[k] - ideals[ofi])/ideals[ofi]*100
 
             results[i, 2] = summ/(k + 1)
