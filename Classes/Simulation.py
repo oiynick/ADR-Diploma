@@ -61,7 +61,7 @@ class Simulation:
         # The matrix of the distribution of the satellite workstatus over time
         # Create an empty array
         arr = np.empty((self.steps, self.n), dtype='int')
-        print(arr)
+
         # Assign the launch failure probability
         p = [.1]
         # Create the probability matrix based on the reliability distribution
@@ -97,8 +97,6 @@ class Simulation:
                     elif ts == lt[sat] + self.strat.time:
                         arr[ts, sat] = 1
                         lt[sat] = ts + new_lt
-
-                if arr[ts, sat] != 1: print(arr[ts, sat])
 
         return arr
 
