@@ -66,7 +66,7 @@ class Simulation:
     def status(self):
         # Upload the matrix of the probabilities
         arr = np.empty((self.steps, self.n), dtype='object')
-        p = [.15]
+        p = [.1]
         for i in range(1, 2207520):
             p.append(.000120114*np.exp(-.000265681*i**.4521)/i**.5479)
         p.append(1 - sum(p))
@@ -74,24 +74,24 @@ class Simulation:
         for ts in range(self.steps):
             for i in range(self.n):
                 if ts < lt[i]:
-                    arr[ts, i] = 'o'
+                    arr[ts, i] = int(1)
                 elif ts == lt[i]:
                     if self.strat.str == 'none':
-                        arr[ts, i] = 'f'
+                        arr[ts, i] = int(3)
                     else:
-                        arr[ts, i] = 'i'
+                        arr[ts, i] = int(2)
                         new_lt = rnd(range(2207521), size=1, p=p)
                         lt[i] += new_lt + self.strat.time
                 elif ts < lt[i] + self.strat.time:
                     if self.strat.str == 'none':
-                        arr[ts, i] = 'n'
+                        arr[ts, i] = int(0)
                     else:
-                        arr[ts, i] = 'r'
+                        arr[ts, i] = int(4)
                 elif ts >= lt[i] + self.strat.time:
                     if self.strat.str == 'none':
-                        arr[ts, i] = 'n'
+                        arr[ts, i] = int(0)
                     else:
-                        arr[ts, i] = 'o'
+                        arr[ts, i] = int(1)
         return arr
 
     def coverage(self, sat, lon, lat, acc):
@@ -141,26 +141,27 @@ class Simulation:
             # Assembling and launch
             if ts == 0:
                 costs += self.sat.launch_cost + self.sat.cost
+                icosts += self.sat.launch_cost + self.sat.cost
 
             # Get the satellite coverage as generator
             points = self.coverage(self.sat, d[ts - num*500, i, 1],
                                    d[ts - num*500, i, 0], self.acc)
             # Check the satellite state for:
-            # o -- operating
-            # i -- interrupted
-            # r -- on reparation
-            # f -- failed
-            # n -- not working
-            if self.states[ts, i] == 'o':
+            # 1 -- operating
+            # 2 -- interrupted
+            # 4 -- on reparation
+            # 3 -- failed
+            # 0 -- not working
+            if self.states[ts, i] == 1:
                 rpts.extend(points)
                 costs += self.sat.operational_cost/2592000*self.step
                 cov += self.sat.coverage
-            elif self.states[ts, i] == 'i':
+            elif self.states[ts, i] == 2:
                 costs += self.strat.replacement_cost
-                costs += self.strat.day_cost/86400*self.step
-            elif self.states[ts, i] == 'r':
-                costs += self.strat.day_cost/86400*self.step
-            elif self.states[ts, i] == 'f':
+                costs += self.strat.day/86400*self.step
+            elif self.states[ts, i] == 4:
+                costs += self.strat.day/86400*self.step
+            elif self.states[ts, i] == 3:
                 dens += self.sat.vol
 
             irpts.extend(points)
