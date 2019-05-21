@@ -22,11 +22,8 @@ class Simulation:
                  strat: str,   # Classes
                  simtime: int, step: int, acc: float):   # Simulation
         '''
-        price -- service price estimation
         alt -- satellites altitude
         volume -- satellite volume
-        lams -- lambdas for Weibull
-        ks -- kef for Weibull
         mass -- satellite mass
         strat -- strategy name (none/ extra/ lod)
         alfa -- FOV of the satellite antenna
@@ -60,7 +57,7 @@ class Simulation:
     def status(self):
         # The matrix of the distribution of the satellite workstatus over time
         # Create an empty array
-        arr = np.empty((self.steps, self.n), dtype='int')
+        arr = np.empty((self.steps, self.n), dtype=np.int8)
 
         # Assign the launch failure probability
         p = [.1]
@@ -182,6 +179,8 @@ class Simulation:
         for p in set(irpts):
             irev += self.money[int(p[0]/self.acc),
                                int(p[1]/self.acc)]*kt
+
+        del d
         # Output array
         return [ts, cov, rev*m[ts], irev*m[ts], costs, icosts, dens]
 
