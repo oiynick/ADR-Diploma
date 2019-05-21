@@ -28,7 +28,7 @@ alt = 1000   # km
 n = int(1600)
 
 # Spare strategy
-strat = 'none'
+strat = 'lod'
 
 # Simulation parameters
 step = int(100)   # seconds
@@ -53,33 +53,35 @@ print('Prepared for simulation in {}'.format(dt.now().strftime("%H:%M:%S")))
 # mes.step_selection(sim)
 # =============================================================================
 
-if __name__ == '__main__':
-    cpus = os.cpu_count()
-    pl = mp.Pool(cpus)   # Create the pool object
-    args = range(tss)   # The amount of steps as a step array
-
-    data = []
-    # Create a proress bar
-    for i in tqdm.tqdm(pl.imap_unordered(sim.step_sim, args,
-                                         int(tss/(2*cpus) + 1)), total=tss):
-        data.append(i)
-
-    # Close & join the pool to commit the operations on multiprocessing
-    pl.close()
-    pl.join
-    out = np.array(data)
-
-    # Sorting the array by the time axis
-    sort = np.empty_like(out)
-    ind = np.argsort(out[:, 0], axis=0)
-    for i, ix in enumerate(ind):
-        for j in range(len(out[0, :])):
-            sort[i, j] = out[ix, j]
-
-    # Calculate the cumulative sum of metrics (except coverage and timestep)
-    cum = np.cumsum(sort[:, 2:], 0)
-    result = np.concatenate((sort[:, :2], cum), 1)
-
-    # Export the file
-    print('Finish time is {}'.format(dt.now().strftime("%H:%M:%S")))
-    sim.export(result)
+# =============================================================================
+# if __name__ == '__main__':
+#     cpus = os.cpu_count()
+#     pl = mp.Pool(cpus)   # Create the pool object
+#     args = range(tss)   # The amount of steps as a step array
+# 
+#     data = []
+#     # Create a proress bar
+#     for i in tqdm.tqdm(pl.imap_unordered(sim.step_sim, args,
+#                                          int(tss/(2*cpus) + 1)), total=tss):
+#         data.append(i)
+# 
+#     # Close & join the pool to commit the operations on multiprocessing
+#     pl.close()
+#     pl.join
+#     out = np.array(data)
+# 
+#     # Sorting the array by the time axis
+#     sort = np.empty_like(out)
+#     ind = np.argsort(out[:, 0], axis=0)
+#     for i, ix in enumerate(ind):
+#         for j in range(len(out[0, :])):
+#             sort[i, j] = out[ix, j]
+# 
+#     # Calculate the cumulative sum of metrics (except coverage and timestep)
+#     cum = np.cumsum(sort[:, 2:], 0)
+#     result = np.concatenate((sort[:, :2], cum), 1)
+# 
+#     # Export the file
+#     print('Finish time is {}'.format(dt.now().strftime("%H:%M:%S")))
+#     sim.export(result)
+# =============================================================================

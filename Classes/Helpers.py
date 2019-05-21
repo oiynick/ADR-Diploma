@@ -9,17 +9,10 @@ class Strategy:
         self.str = strategy   # Strategy type
         self.time = time   # Time for spare in seconds
         if strategy == 'none':   # No spare strategy, no insurance
-            self.limit = 0   # Limit of satellites
             self.replacement_cost = 0   # Money for action
             self.start_cost = 0   # Money in the beginning
             self.day = 0   # Money daily
-        elif strategy == 'extra':   # Extra satellite in-orbit, no insurance
-            self.limit = 3
-            self.replacement_cost = 0
-            self.start_cost = 3 * (sat.cost + sat.launch_cost)
-            self.day = sat.operational_cost
         elif strategy == 'lod':   # Launch-on-demand, no insurance
-            self.limit = 999999999
             self.replacement_cost = sat.cost + sat.launch_cost
             self.start_cost = 0
             self.day = 0
@@ -111,9 +104,9 @@ class Measurements:
                    header='step size (seconds), calc time(s), deviation (%)')
 
 
+class Visualizations:
+
 # =============================================================================
-# class Visualizations:
-# 
 #     def sort_data(scale, array, parameter):
 #         # scale -- step size in seconds not less then 100 seconds
 #         # array -- output simulation array
@@ -144,36 +137,36 @@ class Measurements:
 #             x = x // 10
 # 
 #         if order < 3:
-#             for i in new_arr
+#             # for i in new_arr
 #         elif order >= 3 and order < 6:
 #             
 #         elif order >= 6 and order < 9:
 #             
 #         elif order >= 9:
-# 
-#     def read_csv2np(path_to_the_file: str):
-#         # Reading csv to the numpy array
-#         # Read the number of rows and columns
-#         with open(path_to_the_file, 'r') as file:
-#             reader = csv.reader(file)
-#             next(reader, None)
-#             rows = 0
-#             for row in reader:
-#                 cols = len(row)
-#                 rows += 1
-# 
-#         # Create an output array
-#         results = np.zeros((rows, cols))
-# 
-#         # Fill in the array
-#         with open(path_to_the_file, 'r') as file:
-#             reader = csv.reader(file)
-#             next(reader, None)
-#             for i, row in enumerate(reader):
-#                 for j, val in enumerate(row):
-#                     results[i, j] = val
-# 
-#         # Return the array
-#         return results
-#                     
 # =============================================================================
+
+    def read_csv2np(path_to_the_file: str):
+        # Reading csv to the numpy array
+        # Read the number of rows and columns
+        with open(path_to_the_file, 'r') as file:
+            reader = csv.reader(file)
+            next(reader, None)
+            rows = 0
+            for row in reader:
+                cols = len(row)
+                rows += 1
+
+        # Create an output array
+        results = np.zeros((rows, cols))
+
+        # Fill in the array
+        with open(path_to_the_file, 'r') as file:
+            reader = csv.reader(file)
+            next(reader, None)
+            for i, row in enumerate(reader):
+                for j, val in enumerate(row):
+                    results[i, j] = val
+
+        # Return the array
+        return results
+                    

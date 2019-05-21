@@ -47,16 +47,10 @@ class Simulation:
         self.steps = int(np.floor(simtime / step))
 
         # Spare strategy
-        self.strat = Strategy(strat, self.sat, 0)
+        # TODO: to change timing for the sat change
+        self.strat = Strategy(strat, self.sat, 30*24*36)
 
-        # Upload files longitude, latitude of the undersat point on the Earth
-        # money is for money grid, lifetime is for array of lifetimes
-# =============================================================================
-#         with open('./PP_Data/lon12.data', 'rb') as f:
-#             self.lon = pickle.load(f)
-#         with open('./PP_Data/lat12.data', 'rb') as f:
-#             self.lat = pickle.load(f)
-# =============================================================================
+        # Upload money is for money grid, lifetime is for array of lifetimes
         with open('./PP_Data/market.data', 'rb') as f:
             self.money = pickle.load(f)
         st = t()
@@ -64,34 +58,48 @@ class Simulation:
         print('States array took {}s'.format(t() - st))
 
     def status(self):
-        # Upload the matrix of the probabilities
-        arr = np.empty((self.steps, self.n), dtype='object')
+        # The matrix of the distribution of the satellite workstatus over time
+        # Create an empty array
+        arr = np.empty((self.steps, self.n), dtype='int')
+        print(arr)
+        # Assign the launch failure probability
         p = [.1]
+        # Create the probability matrix based on the reliability distribution
         for i in range(1, 2207520):
             p.append(.000120114*np.exp(-.000265681*i**.4521)/i**.5479)
         p.append(1 - sum(p))
         lt = rnd(range(len(p)), size=self.n, p=p)
-        for ts in range(self.steps):
-            for i in range(self.n):
-                if ts < lt[i]:
-                    arr[ts, i] = int(1)
-                elif ts == lt[i]:
-                    if self.strat.str == 'none':
-                        arr[ts, i] = int(3)
-                    else:
-                        arr[ts, i] = int(2)
+
+        # For every sat for every time step assign the status value
+        # 1 -- the satellite is working
+        # 2 -- the satellite has been interupted
+        # 3 -- the satellite expirienced the failure (no mitigation available)
+        # 4 -- the satellite is being replaced
+        for sat in range(self.n):
+            for ts in range(self.steps):
+
+                if self.strat.str == 'none':
+                    if ts < lt[sat]:
+                        arr[ts, sat] = 1
+                    elif ts == lt[sat]:
+                        arr[ts, sat] = 3
+                    elif ts > lt[sat]:
+                        arr[ts, sat] = 0
+
+                elif self.strat.str == 'lod':
+                    if ts < lt[sat]:
+                        arr[ts, sat] = 1
+                    elif ts == lt[sat]:
+                        arr[ts, sat] = 2
                         new_lt = rnd(range(2207521), size=1, p=p)
-                        lt[i] += new_lt + self.strat.time
-                elif ts < lt[i] + self.strat.time:
-                    if self.strat.str == 'none':
-                        arr[ts, i] = int(0)
-                    else:
-                        arr[ts, i] = int(4)
-                elif ts >= lt[i] + self.strat.time:
-                    if self.strat.str == 'none':
-                        arr[ts, i] = int(0)
-                    else:
-                        arr[ts, i] = int(1)
+                    elif ts > lt[sat] and ts < lt[sat] + self.strat.time:
+                        arr[ts, sat] = 4
+                    elif ts == lt[sat] + self.strat.time:
+                        arr[ts, sat] = 1
+                        lt[sat] = ts + new_lt
+
+                if arr[ts, sat] != 1: print(arr[ts, sat])
+
         return arr
 
     def coverage(self, sat, lon, lat, acc):

@@ -21,11 +21,7 @@ def step_data():
 
     bar1 = go.Bar(x=x_vals, y=step_select[1:, 1],
                   name='Execution time on 1000 second',
-                  marker=dict(color=['{}'.format(dark),
-                                     '{}'.format(dark),
-                                     '{}'.format(dark),
-                                     '{}'.format(dark),
-                                     '{}'.format(dark)]))
+                  marker=dict(color=dark))
     # Invisible one
     bar2 = go.Bar(x=x_vals, y=[0], hoverinfo='none',
                   showlegend=False)
@@ -34,11 +30,7 @@ def step_data():
                   showlegend=False)
     bar4 = go.Bar(x=x_vals, y=step_select[1:, 2],
                   name='Average maximum error on each step', yaxis='y2',
-                  marker=dict(color=['{}'.format(accent),
-                                     '{}'.format(med),
-                                     '{}'.format(med),
-                                     '{}'.format(med),
-                                     '{}'.format(med)]))
+                  marker=dict(color=[accent, med, med, med, med]))
     scat1 = go.Scatter(x=x_vals, y=[25 for i in x_vals], yaxis='y2',
                        name='Considerable error', mode='lines',
                        marker=dict(color=med), line=dict(width=2))
@@ -59,7 +51,22 @@ def step_data():
                                    overlaying='y'))
     fig = go.Figure(data=data, layout=layout)
     # ply.plot(fig, filename='Multiple axes')
-    pio.write_image(fig, './step_selection.pdf')
+    pio.write_image(fig, './Output/Charts and Images/step_selection.pdf')
+
+
+def chunk_data():
+    bar1 = go.Bar(x=[80, 315, 985, 1971, 3942, 7884, 15268],
+                  y=[3, 5, 25, 50, 100, 100, 100],
+                  name='Computational power used on 300K steps',
+                  marker=dict(color=[dark, dark, dark, dark,
+                                     accent, dark, dark]))
+    layout = go.Layout(title='Chunk sizes comparison',
+                       yaxis=dict(title='Power of 40 CPUs 3.2 GHz, %'),
+                       xaxis=dict(title='Amount of steps'))
+    data = [bar1]
+    fig = go.Figure(data=data, layout=layout)
+    ply.plot(fig)
+    pio.write_image(fig, './Output/Charts and Images/chunk_selection.pdf')
 
 
 def revenue_data():
@@ -81,3 +88,4 @@ def revenue_data():
     py.plot()
     
 # step_data()
+chunk_data()
