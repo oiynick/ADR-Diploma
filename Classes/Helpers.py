@@ -111,67 +111,69 @@ class Measurements:
                    header='step size (seconds), calc time(s), deviation (%)')
 
 
-class Visualizations:
-
-    def sort_data(scale, array, parameter):
-        # scale -- step size in seconds not less then 100 seconds
-        # array -- output simulation array
-        # parameter -- sorting parameter (num 1:6)
-        # sim -- simulation class object
-
-        if parameter < 1 and parameter > 6:
-            raise Exception('Wrong parameter number!')
-
-        # Take the parameter that needed for visualisation
-        new_array = array[:, parameter]
-
-        # Create new values arrays
-        results = np.zeros(())
-            
-        # Calculate the scale
-        for i in range(new_array.shape[0]):
-            if i*100 % scale == 0:
-                new_x_vals.append(new_array[i, 0] / scale)
-                new_y_vals.append(new_array[i, 1])
-                
-                max_val = np.amax(new_array[:, 1])
-
-        order = 0
-        x = max_val
-        while x // 10 == 0:
-            order += 1
-            x = x // 10
-
-        if order < 3:
-            for i in new_arr
-        elif order >= 3 and order < 6:
-            
-        elif order >= 6 and order < 9:
-            
-        elif order >= 9:
-
-    def read_csv2np(path_to_the_file: str):
-        # Reading csv to the numpy array
-        # Read the number of rows and columns
-        with open(path_to_the_file, 'r') as file:
-            reader = csv.reader(file)
-            next(reader, None)
-            rows = 0
-            for row in reader:
-                cols = len(row)
-                rows += 1
-
-        # Create an output array
-        results = np.zeros((rows, cols))
-
-        # Fill in the array
-        with open(path_to_the_file, 'r') as file:
-            reader = csv.reader(file)
-            next(reader, None)
-            for i, row in enumerate(reader):
-                for j, val in enumerate(row):
-                    results[i, j] = val
-
-        # Return the array
-        return results
-                    
+# =============================================================================
+# class Visualizations:
+# 
+#     def sort_data(scale, array, parameter):
+#         # scale -- step size in seconds not less then 100 seconds
+#         # array -- output simulation array
+#         # parameter -- sorting parameter (num 1:6)
+#         # sim -- simulation class object
+# 
+#         if parameter < 1 and parameter > 6:
+#             raise Exception('Wrong parameter number!')
+# 
+#         # Take the parameter that needed for visualisation
+#         new_array = array[:, parameter]
+# 
+#         # Create new values arrays
+#         results = np.zeros(())
+#             
+#         # Calculate the scale
+#         for i in range(new_array.shape[0]):
+#             if i*100 % scale == 0:
+#                 new_x_vals.append(new_array[i, 0] / scale)
+#                 new_y_vals.append(new_array[i, 1])
+#                 
+#                 max_val = np.amax(new_array[:, 1])
+# 
+#         order = 0
+#         x = max_val
+#         while x // 10 == 0:
+#             order += 1
+#             x = x // 10
+# 
+#         if order < 3:
+#             for i in new_arr
+#         elif order >= 3 and order < 6:
+#             
+#         elif order >= 6 and order < 9:
+#             
+#         elif order >= 9:
+# 
+#     def read_csv2np(path_to_the_file: str):
+#         # Reading csv to the numpy array
+#         # Read the number of rows and columns
+#         with open(path_to_the_file, 'r') as file:
+#             reader = csv.reader(file)
+#             next(reader, None)
+#             rows = 0
+#             for row in reader:
+#                 cols = len(row)
+#                 rows += 1
+# 
+#         # Create an output array
+#         results = np.zeros((rows, cols))
+# 
+#         # Fill in the array
+#         with open(path_to_the_file, 'r') as file:
+#             reader = csv.reader(file)
+#             next(reader, None)
+#             for i, row in enumerate(reader):
+#                 for j, val in enumerate(row):
+#                     results[i, j] = val
+# 
+#         # Return the array
+#         return results
+#                     
+# =============================================================================
