@@ -73,7 +73,7 @@ def gen_countries(f_json, acc):
             countries[i, j] = con
 
     # Save array to the text file
-    np.savetxt('../PP_Data/countries_list.txt', countries, fmt='%s',
+    np.savetxt('./PP_Data/countries_list.txt', countries, fmt='%s',
                header='xlt = -180, ylt = -90, step = {}'.format(acc))
     return countries
 
@@ -81,11 +81,11 @@ def gen_countries(f_json, acc):
 def country_data():
     # Households size from .csv
     # Calculate the number of rows in the CDV
-    with open('../Raw_data/countries.csv', 'r') as hh:
+    with open('./Raw_data/countries.csv', 'r') as hh:
         rd_0 = csv.reader(hh)
         rows = sum(1 for i in rd_0)
     # Open the file for reading
-    with open('../Raw_data/countries.csv', 'r') as hh:
+    with open('./Raw_data/countries.csv', 'r') as hh:
         rd_0 = csv.reader(hh)
         data = np.empty((5, rows), dtype='object')
         for i, row in enumerate(rd_0):
@@ -109,7 +109,7 @@ def rp(c_data):
     for name in names:
         i = 0   # i -- for every point of the curve
         data = []
-        with open('../Raw_data/countries/{}.csv'.format(name), 'r') as rp:
+        with open('./Raw_data/countries/{}.csv'.format(name), 'r') as rp:
             rd_1 = csv.reader(rp)
             # Create empty array of a shape
             rp_data = np.empty((2, len(names)), dtype='object')
@@ -170,8 +170,12 @@ def pickles(sim):
 
 
 def population_grid(sim):
-    lats = np.swapaxes(sim.lat, 0, 1)
-    lons = np.swapaxes(sim.lon, 0, 1)
+    if sim.lat.shape[0] != 315361:
+        lats = np.swapaxes(sim.lat, 0, 1)
+        lons = np.swapaxes(sim.lon, 0, 1)
+    else:
+        lats = sim.lat
+        lons = sim.lon
 
     data = np.stack((lats, lons), axis=2)
 
@@ -184,9 +188,9 @@ def population_grid(sim):
 
 
 # Generate an array of the population based on the .asc file
-pop = pop_array('../Raw_data/pop_100/pop.asc')
+pop = pop_array('./Raw_data/pop_100/pop.asc')
 # Prepare preliminary data
-countries = np.loadtxt('../PP_Data/countries_list.txt',
+countries = np.loadtxt('./PP_Data/countries_list.txt',
                        skiprows=1, dtype='object')
 # UNCOMMENT IF COUNTRY CODES GRID IS LOST AND NEEDS TO BE GENERATED AGAIN
 # countries = gen_countries('../Raw_data/countries.geojson', 1)
@@ -195,5 +199,5 @@ rp_data = rp(c_data)
 # Generate data
 data = static(pop, countries, c_data, rp_data, 100, 0.1)
 # Save to the file
-np.savetxt('../PP_Data/marketing_vals.txt', data,
+np.savetxt('./PP_Data/marketing_vals.txt', data,
            header='xlt = -180, ylt = -90, step = {}'.format(1), fmt='%f')

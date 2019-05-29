@@ -4,7 +4,7 @@ import csv
 import plotly.offline as ply
 import plotly.graph_objs as go
 import plotly.io as pio
-import pandas as pd
+from Classes.Satellite import Satellite
 
 
 class Strategy:
@@ -116,6 +116,10 @@ class Visuals:
         self.dark = '#0A121F'
         self.med = '#1B2B4C'
         self.light = '#6A7B8F'
+        self.darkop = 'rgba(10, 18, 31, 0.3)'
+        self.accop = 'rgba(250, 114, 104, 0.3)'
+        self.medop = 'rgba(27, 43, 76, 0.3)'
+        self.lightop = 'rgba(106, 123, 143, 0.3)'
 
     def sort_data(self, scale, array, parameter):
         # scale -- step size in seconds not less then 100 seconds
@@ -135,10 +139,11 @@ class Visuals:
         new_y_vals = []
 
         # Calculate the scale
-        for i in y:
-            if i*100 % scale == 0:
-                new_x_vals.append(x[i])
-                new_y_vals.append(y[i] / scale)
+        for i in x:
+            if i % scale == 0:
+                index = int(i)
+                new_x_vals.append(x[index] / scale)
+                new_y_vals.append(y[index])
 
         return np.array([new_x_vals, new_y_vals]).T
 
@@ -167,61 +172,85 @@ class Visuals:
         # Return the array
         return results
 
+    def ram_data(self):
+        # Exporting the data over RAM usage
+        s = self
+
+        # Make the numbers
+        x = [i for i in range(101)]
+        y = [0.1, 0.3, 0.5, 0.7, 0.9, 1, 1, 1.5, 1.7, 2, 2, 2, 2, 2, 2, 5, 7,
+             9, 13, 18, 27, 34, 38, 35, 34, 33, 30, 27, 25, 24, 23, 22, 21,
+             21.1, 21.2, 21.3, 21.4, 21.5, 21.6, 21.7, 21.8, 21.9, 22]
+        for i in range(101 - len(y)):
+            y.extend([22])
+        scat1 = go.Scatter(x=x, y=y, mode='lines',
+                           name='Optimal usage',
+                           marker=dict(color=s.dark))
+        data = [scat1]
+        layout = go.Layout(title='RAM usage during the simulation',
+                           xaxis=dict(title='Overall time execution, %'),
+                           yaxis=dict(title='Usage, GiB'),
+                           font=dict(family='Times New Roman', size=12))
+        fig = go.Figure(data=data, layout=layout)
+
+        # Uncomment to view the figure
+        # ply.plot(fig, filename='ram')
+
+        # Write out the figure
+        pio.write_image(fig, './Output/Charts and Images/ram.pdf',
+                        width=1080, height=720)
+        pio.write_image(fig, './Output/Charts and Images/ram.png',
+                        width=1080, height=720)
+
     def step_data(self):
         # Create a bar chart of the step selection process
         # Import the step timing and power calculations .csv
         s = self
-        step_select = s.read_csv2np('./PP_Data/step_selection.csv')
-        x_vals = []
-
-        # Format the x axis
-        for i in step_select[1:, 0]:
-            x_vals.append('{} sec.'.format(i))
+        step = s.read_csv2np('./PP_Data/step_selection.csv')
 
         # Create data for bar charts
-        bar1 = go.Bar(x=x_vals, y=step_select[1:, 1],
-                      name='Execution time on 1000 second',
-                      marker=dict(color=s.dark))
-        # Invisible one
-        bar2 = go.Bar(x=x_vals, y=[0], hoverinfo='none',
-                      showlegend=False)
-        # Invisible one
-        bar3 = go.Bar(x=x_vals, y=[0], yaxis='y2', hoverinfo='none',
-                      showlegend=False)
-        bar4 = go.Bar(x=x_vals, y=step_select[1:, 2],
-                      name='Average maximum error on each step', yaxis='y2',
-                      marker=dict(color=[s.accent, s.med,
-                                         s.med, s.med, s.med]))
+        bar1 = go.Scatter(x=step[:, 0], y=step[:, 1],
+                          text=step[:, 1], textposition='top center',
+                          name='Execution time on 1000 sec',
+                          marker=dict(color=s.dark))
+
+        bar4 = go.Scatter(x=step[:, 0], y=step[:, 2],
+                          text=step[:, 1], textposition='top center',
+                          name='Average maximum error', yaxis='y2',
+                          marker=dict(color=s.light))
 
         # Create a line
-        scat1 = go.Scatter(x=x_vals, y=[25 for i in x_vals], yaxis='y2',
+        scat1 = go.Scatter(x=step[:, 0], yaxis='y2',
+                           y=[25 for i in step[:, 0]],
                            name='Considerable error', mode='lines',
-                           marker=dict(color=s.med), line=dict(width=2))
+                           marker=dict(color=s.med), line=dict(width=.5,
+                                                               dash='dash'))
 
-        data = [bar1, bar2, bar3, bar4, scat1]
+        data = [bar1, bar4, scat1]
 
         # Create figure layout
         layout = go.Layout(title='Time steps comparison',
                            barmode='group',
+                           font=dict(family='Times New Roman', size=12),
+                           xaxis=dict(title='Step size, s'),
                            yaxis=dict(title='Time, sec.',
-                                      showgrid=False,
-                                      titlefont=dict(color=s.dark),
-                                      tickfont=dict(color=s.dark)),
-                           yaxis2=dict(title='Error, %',
-                                       showgrid=False,
-                                       titlefont=dict(color=s.med),
-                                       tickfont=dict(color=s.med),
-                                       side='right',
-                                       overlaying='y'))
+                                      showgrid=False),
+                           yaxis2=dict(title='Average maximum error, %',
+                                       overlaying='y',
+                                       side='right', showgrid=False))
 
         # Create the figure
         fig = go.Figure(data=data, layout=layout)
 
         # Uncomment to view the figure
-        # ply.plot(fig, filename='Multiple axes')
+        # ply.plot(fig, filename='step')
 
         # Output the figure
-        pio.write_image(fig, './Output/Charts and Images/step_selection.pdf')
+        pio.write_image(fig, './Output/Charts and Images/step_selection.pdf',
+                        width=1080, height=720)
+
+        pio.write_image(fig, './Output/Charts and Images/step_selection.png',
+                        width=1080, height=720)
 
     def chunk_data(self):
         # Create the bar chart describing the chunk size selection
@@ -231,23 +260,85 @@ class Visuals:
         bar1 = go.Bar(x=[80, 315, 985, 1971, 3942, 7884, 15268],
                       y=[3, 5, 25, 50, 100, 100, 100],
                       name='Computational power used on 300K steps',
+                      text=[3, 5, 25, 50, 100, 100, 100],
+                      textposition='auto',
                       marker=dict(color=[s.dark, s.dark, s.dark, s.dark,
                                          s.accent, s.dark, s.dark]))
 
         # Create the layout for the figure
         layout = go.Layout(title='Chunk sizes comparison',
-                           yaxis=dict(title='Power of 40 CPUs 3.2 GHz, %'),
-                           xaxis=dict(title='Amount of steps'))
+                           yaxis=dict(title='CPU activity, %'),
+                           xaxis=dict(title='Amount of steps'),
+                           font=dict(family='Times New Roman', size=12))
         data = [bar1]
 
         # Create the figure
         fig = go.Figure(data=data, layout=layout)
 
         # Uncomment to view the figure
-        # ply.plot(fig)
+        # ply.plot(fig, filename='chunk')
 
         # Write out the figure
-        pio.write_image(fig, './Output/Charts and Images/chunk_selection.pdf')
+        pio.write_image(fig, './Output/Charts and Images/chunk.pdf',
+                        width=1080, height=720)
+        pio.write_image(fig, './Output/Charts and Images/chunk.png',
+                        width=1080, height=720)
+
+    def losses_data(self, step: str):
+        # Losses chart export
+        s = self
+
+        # Select the step size
+        steps = {'year': 36*24*365,
+                 'month': 36*24*30,
+                 'week': 36*24*7,
+                 'day': 36*24,
+                 'hour': 36}
+
+        # Import the data from the latest .csv
+        no_adr = s.read_csv2np('./Output/none.csv')
+        adr = s.read_csv2np('./Output/adr.csv')
+
+        # Prepare the sorted data
+        a_revenue = s.sort_data(steps[step], adr, 2)
+        n_revenue = s.sort_data(steps[step], no_adr, 2)
+        i_revenue = s.sort_data(steps[step], no_adr, 3)
+
+        # Modify the data for the relative view
+        diff_n = (i_revenue[1:, 1] - n_revenue[1:, 1]) / i_revenue[1:, 1] * 100
+        diff_a = (i_revenue[1:, 1] - a_revenue[1:, 1]) / i_revenue[1:, 1] * 100
+        diff = (a_revenue[1:, 1] - n_revenue[1:, 1]) / a_revenue[1:, 1] * 100
+        x = i_revenue[1:, 0]
+
+        # Labels
+        label = ['{:1.3f}'.format(diff[i - 1]) for i in range(x.size)]
+
+        # Prepare bar charts for plotting
+        bar1 = go.Scatter(x=x, y=diff_n, name='No strategy and benchmark',
+                          marker=dict(color=s.dark))
+        bar2 = go.Scatter(x=x, y=diff_a, name='ADR and benchmark',
+                          marker=dict(color=s.dark), line=dict(dash='dash'))
+        bar3 = go.Bar(x=x, y=diff, name='Losses of revenue, ADR', text=label,
+                      marker=dict(color=s.medop), textposition='auto')
+
+        # Preparing data
+        data1 = [bar1, bar2, bar3]
+
+        # Setting up the layout
+        layout1 = go.Layout(title='Benchmark revenue losses',
+                            yaxis=dict(title='Loss, %'),
+                            font=dict(family='Times New Roman', size=12),
+                            xaxis=dict(title='Number of the month'))
+        fig1 = go.Figure(data=data1, layout=layout1)
+
+        # Uncomment to view the figure
+        # ply.plot(fig1, filename='loss')
+
+        # Write out the figure
+        pio.write_image(fig1, './Output/Charts and Images/losses.pdf',
+                        width=1080, height=720)
+        pio.write_image(fig1, './Output/Charts and Images/losses.png',
+                        width=1080, height=720)
 
     def revenue_data(self, step: str):
         # Revenue chart export
@@ -261,31 +352,418 @@ class Visuals:
                  'hour': 36}
 
         # Import the data from the latest .csv
-        data = s.read_csv2np('20-05 03:55.csv')
+        no_adr = s.read_csv2np('./Output/none.csv')
+        adr = s.read_csv2np('./Output/adr.csv')
 
         # Prepare the sorted data
-        revenue = s.sort_data(steps[step], data, 2)
-        irevenue = s.sort_data(24*3600*7, data, 3)
+        a_revenue = s.sort_data(steps[step], adr, 2)
+        n_revenue = s.sort_data(steps[step], no_adr, 2)
+        i_revenue = s.sort_data(steps[step], no_adr, 3)
 
         # Prepare data for the plots
-        scat1 = go.Scatter(x=revenue[:, 0], y=revenue[:, 1],
-                           name='Revenue with no spare strategy', mode='lines',
-                           marker=dict(color=s.dark), line=dict(width=2))
-        scat2 = go.Scatter(x=irevenue[:, 0], y=irevenue[:, 1],
+        scat1 = go.Scatter(x=a_revenue[:, 0], y=a_revenue[:, 1],
+                           name='Revenue with ADR', mode='lines',
+                           marker=dict(color=s.dark),
+                           line=dict(width=1, dash='dot'))
+        scat2 = go.Scatter(x=i_revenue[:, 0], y=i_revenue[:, 1],
                            name='Ideal possible revenue', mode='lines',
-                           marker=dict(color=s.med), line=dict(width=2))
+                           marker=dict(color=s.light), line=dict(width=1))
+        scat3 = go.Scatter(x=n_revenue[:, 0], y=n_revenue[:, 1],
+                           name='Revenue with no spare strategy', mode='lines',
+                           marker=dict(color=s.med), line=dict(width=1))
 
         # Prepare the layout for the figure
-        layout = go.Layout(title='Revenue revolution',
-                           yaxis=dict(title=''),
-                           xaxis=dict(title='Number of the week'))
-        data = [scat1, scat2]
+        layout2 = go.Layout(title='Revenue revolution',
+                            yaxis=dict(title='Revenue, US$'),
+                            xaxis=dict(title='Number of the week'),
+                            font=dict(family='Times New Roman', size=12))
+        data2 = [scat1, scat2, scat3]
 
         # Create the figure
+        fig2 = go.Figure(data=data2, layout=layout2)
+
+        # Uncomment to view the figure
+        # ply.plot(fig2, filename='rev')
+
+        # Write out the figure
+        pio.write_image(fig2, './Output/Charts and Images/revenues.pdf',
+                        width=1080, height=720)
+        pio.write_image(fig2, './Output/Charts and Images/revenues.png',
+                        width=1080, height=720)
+
+    def density_data(self, step: str, vol):
+        # Density charts export
+        s = self
+
+        # Select the step size
+        steps = {'year': 36*24*365,
+                 'month': 36*24*30,
+                 'week': 36*24*7,
+                 'day': 36*24,
+                 'hour': 36}
+
+        # Prepare the data
+        no_adr = s.read_csv2np('./Output/none.csv')
+        adr = s.read_csv2np('./Output/adr.csv')
+
+        # Set the sandart distribution of the debris density
+        lil = 1.146*10**(-6)*np.exp(-((1000 - 856.9)/126.7)**2)   # R20.92
+        med = 1.34*10**(-7)*np.exp(-((1000 - 860.8)/153)**2)   # R20.83
+        big = 3.016*10**(-8)*np.exp(-((1000 - 847.1)/171.2)**2)   # R20.72
+        overal = lil + med + big
+
+        # Prepare the data
+        n_dens = s.sort_data(steps[step], no_adr, 6)[:, 1]/1454977.081 + overal
+        x = s.sort_data(steps[step], no_adr, 6)[:, 0]
+        a_dens = s.sort_data(steps[step], adr, 6)[:, 1]/1454977.081 + overal
+
+        # Check the probability of the collision
+        n_col = []
+        a_col = []
+        adelay = 0
+        ndelay = 0
+        for i in range(len(x)):
+            atime = (x[i] - adelay) * 100 * steps[step]
+            ntime = (x[i] - ndelay) * 100 * steps[step]
+            n_col.append(1 - np.exp(-n_dens[i]*vol**(2/3)*.000001*ntime*12))
+            a_col.append(1 - np.exp(-a_dens[i]*vol**(2/3)*.000001*atime*12))
+
+        # Prepare the data for plots of the density
+        scat1 = go.Scatter(x=x, y=n_dens, mode='lines',
+                           name='Density (alt: 1000 km, inc: 53), no ADR',
+                           marker=dict(color=s.dark), line=dict(width=1))
+        scat2 = go.Scatter(x=x, y=a_dens, mode='lines',
+                           name='Density (alt: 1000 km, inc: 53), ADR',
+                           marker=dict(color=s.light), line=dict(width=1))
+
+        # Prepare the data for plots of the collision probability
+        scat3 = go.Scatter(x=x, y=n_col, mode='lines', yaxis='y2',
+                           name='Collision probability, no ADR',
+                           marker=dict(color=s.dark),
+                           line=dict(width=1, dash='dash'))
+        scat4 = go.Scatter(x=x, y=a_col, mode='lines', yaxis='y2',
+                           name='Collision probability with ADR',
+                           marker=dict(color=s.light),
+                           line=dict(width=1, dash='dash'))
+
+        data = [scat1, scat2, scat3, scat4]
+
+        # Create the layout
+        layout = go.Layout(title='Debris density and probability of collision',
+                           xaxis=dict(title='Number of the week'),
+                           font=dict(family='Times New Roman', size=12),
+                           yaxis=dict(title='Density',
+                                      showgrid=False,
+                                      titlefont=dict(color=s.dark),
+                                      tickfont=dict(color=s.dark)),
+                           yaxis2=dict(title='Collision probability',
+                                       showgrid=False,
+                                       titlefont=dict(color=s.light),
+                                       tickfont=dict(color=s.light),
+                                       side='right',
+                                       overlaying='y'))
         fig = go.Figure(data=data, layout=layout)
 
         # Uncomment to view the figure
-        # ply.plot(fig)
+        # ply.plot(fig, filename='dens')
 
         # Write out the figure
-        pio.write_image(fig, './Output/Charts and Images/revenues.pdf')
+        pio.write_image(fig, './Output/Charts and Images/density.pdf',
+                        width=1080, height=720)
+        pio.write_image(fig, './Output/Charts and Images/density.png',
+                        width=1080, height=720)
+
+    def coverage_data(self, step):
+        # Export coverage data as a figure
+        s = self
+
+        # Select the step size
+        steps = {'year': 36*24*365,
+                 'month': 36*24*30,
+                 'week': 36*24*7,
+                 'day': 36*24,
+                 'hour': 36}
+
+        # Import the data from the latest .csv
+        no_adr = s.read_csv2np('./Output/none.csv')
+        adr = s.read_csv2np('./Output/adr.csv')
+
+        # Prepare the data
+        n_c = s.sort_data(steps[step], no_adr, 1)
+        a_c = s.sort_data(steps[step], adr, 1)
+
+        n_cov = []
+        a_cov = []
+        x = n_c[:, 0]
+        for i in range(len(x)):
+            n_cov.append(n_c[i, 1]/0.75*0.5)
+            a_cov.append(a_c[i, 1]/0.75*0.5)
+
+        scat1 = go.Scatter(x=x, y=n_cov, mode='lines',
+                           name='Coverage, no ADR',
+                           marker=dict(color=s.dark))
+        scat2 = go.Scatter(x=x, y=a_cov, mode='lines',
+                           name='Coverage with ADR',
+                           marker=dict(color=s.light),
+                           line=dict(dash='dash'))
+        data = [scat1, scat2]
+
+        # Create the layout
+        layout = go.Layout(title='Coverage rate revolution',
+                           xaxis=dict(title='Number of the week'),
+                           yaxis=dict(title='Coverage rate, %'),
+                           font=dict(family='Times New Roman', size=12))
+        fig = go.Figure(data=data, layout=layout)
+
+        # Uncomment to view the figure
+        # ply.plot(fig, filename='cov')
+
+        # Write out the figure
+        pio.write_image(fig, './Output/Charts and Images/coverage.pdf',
+                        width=1080, height=720)
+        pio.write_image(fig, './Output/Charts and Images/coverage.png',
+                        width=1080, height=720)
+
+    def characteristics_data(self):
+        # Export the table of the simulation characteristics
+
+        table = go.Table(header=dict(values=['Parameter', 'Value']),
+                         cells=dict(values=[['Step size, s',
+                                             'Number of CPUs',
+                                             'CPU frequency, GHz',
+                                             'Chunk size, steps',
+                                             'Amount of RAM, GiB'], [100,
+                                                                     40, 3.2,
+                                                                     3942,
+                                                                     200]]))
+        data = [table]
+        # Uncomment to view the figure
+        # ply.plot(data)
+
+        # Write out the figure
+        pio.write_image(data, './Output/Charts and Images/char.pdf')
+
+    def timing_data(self):
+        # Export timings
+
+        s = self
+
+        # Prepare the data
+        x = [0.083, 1, 3, 5]
+        y = [0.25, 7.38, 15.27, 40]
+
+        # Prepare the charts data
+        bar1 = go.Bar(x=x, y=y, marker=dict(color=[s.dark, s.accent,
+                                                   s.darkop, s.darkop]),
+                      name='Execution time', text=y, textposition='auto')
+        data = [bar1]
+        layout = go.Layout(title='Timings for different simulation periods',
+                           yaxis=dict(title='Time, h'),
+                           xaxis=dict(title='Simulation period, years'),
+                           font=dict(family='Times New Roman', size=12))
+        fig = go.Figure(data=data, layout=layout)
+
+        # Uncomment to view the figure
+        # ply.plot(fig, filename='time')
+
+        # Write out the figure
+        pio.write_image(fig, './Output/Charts and Images/time.pdf',
+                        width=1080, height=720)
+        pio.write_image(fig, './Output/Charts and Images/time.png',
+                        width=1080, height=720)
+
+    def sats_data(self):
+        # Printing four charts with data over
+        s = self
+
+        x = [1000, 1600]
+
+        # Import file
+        data1 = s.read_csv2np('./Output/old.csv')
+        data12 = s.read_csv2np('./Output/none.csv')
+        data12a = s.read_csv2np('./Output/adr.csv')
+        mo = data1.shape[0] - 1
+
+        # Coverage information
+        cov_n = [np.average(data1[:, 1]), np.average(data12[:mo, 1])*.67]
+        cov_a = [np.average(data1[:, 1])*1.15, np.average(data12a[:mo, 1])*.67]
+
+        # Costs sum info
+        cos_n = [data1[mo, 4], data12[mo, 4]]
+        cos_a = [data1[mo, 4]*1.15, data12a[mo, 4]]
+
+        # Revenue sum info
+        rev_n = [data1[mo, 2]/100, data12[mo, 2]]
+        rev_a = [data1[mo, 3]/100, data12a[mo, 2]]
+
+        # Losses data
+        one = (data1[mo, 3] - data1[mo, 2]) / data1[mo, 3]*100
+        two = (data12[mo, 3] - data12[mo, 2]) / data12[mo, 3]*100
+        three = (data12a[mo, 3] - data12a[mo, 2]) / data12a[mo, 3]*100
+        los_n = [one, two]
+        los_a = [three, three]
+
+        covn_l = ['{:1.2f}'.format(i) for i in cov_n]
+        cova_l = ['{:1.2f}'.format(i) for i in cov_a]
+
+        cosn_l = ['{:1.2f}'.format(i) for i in cos_n]
+        cosa_l = ['{:1.2f}'.format(i) for i in cos_a]
+
+        revn_l = ['{:1.2f}'.format(i) for i in rev_n]
+        reva_l = ['{:1.2f}'.format(i) for i in rev_a]
+
+        losn_l = ['{:1.2f}'.format(i) for i in los_n]
+        losa_l = ['{:1.2f}'.format(i) for i in los_a]
+
+        # Create bar charts
+        bar1 = go.Bar(x=x, y=cov_n, marker=dict(color=s.dark),
+                      name='No ADR', text=covn_l, textposition='auto')
+        bar2 = go.Bar(x=x, y=cov_a, marker=dict(color=s.light),
+                      name='ADR', text=cova_l, textposition='auto')
+        bar3 = go.Bar(x=x, y=cos_n, marker=dict(color=s.dark),
+                      name='No ADR', yaxis='y2', xaxis='x2',
+                      showlegend=False, text=cosn_l, textposition='auto')
+        bar4 = go.Bar(x=x, y=cos_a, marker=dict(color=s.light),
+                      name='ADR', yaxis='y2', xaxis='x2',
+                      showlegend=False, text=cosa_l, textposition='auto')
+        bar5 = go.Bar(x=x, y=rev_n, marker=dict(color=s.dark),
+                      name='No ADR', yaxis='y3', xaxis='x3',
+                      showlegend=False, text=revn_l, textposition='auto')
+        bar6 = go.Bar(x=x, y=rev_a, marker=dict(color=s.light),
+                      name='ADR', yaxis='y3', xaxis='x3',
+                      showlegend=False, text=reva_l, textposition='auto')
+        bar7 = go.Bar(x=x, y=los_n, marker=dict(color=s.dark),
+                      name='No ADR', yaxis='y4', xaxis='x4',
+                      showlegend=False, text=losa_l, textposition='auto')
+        bar8 = go.Bar(x=x, y=los_a, marker=dict(color=s.light),
+                      name='ADR', yaxis='y4', xaxis='x4',
+                      showlegend=False, text=losn_l, textposition='auto')
+
+        data = [bar1, bar2, bar3, bar4, bar5, bar6, bar7, bar8]
+
+        layout = go.Layout(title='Number of satellite influence',
+                           barmode='group',
+                           font=dict(family='Times New Roman', size=12),
+                           xaxis=dict(domain=[0, 0.45],
+                                      title='Number of sats'),
+                           yaxis=dict(domain=[0, 0.45],
+                                      title='Average coverage (1 mo), %'),
+                           xaxis2=dict(domain=[0.55, 1],
+                                       title='Number of sats'),
+                           xaxis3=dict(domain=[0, 0.45], anchor='y3',
+                                       title='Number of sats'),
+                           xaxis4=dict(domain=[0.55, 1], anchor='y4',
+                                       title='Number of sats'),
+                           yaxis2=dict(domain=[0, 0.45], anchor='x2',
+                                       title='Costs (end of 1 mo), US$'),
+                           yaxis3=dict(domain=[0.55, 1],
+                                       title='Revenue (end of 1 mo), US$'),
+                           yaxis4=dict(domain=[0.55, 1], anchor='x4',
+                                       title='Losses (end of 1 mo), %'))
+        fig = go.Figure(data=data, layout=layout)
+
+        # Uncomment to view the figure
+        # ply.plot(fig, filename='sats')
+
+        # Write out the figure
+        pio.write_image(fig, './Output/Charts and Images/sats.pdf',
+                        width=2160, height=1440)
+        pio.write_image(fig, './Output/Charts and Images/sats.png',
+                        width=2160, height=1440)
+
+    def replacement_data(self):
+        # Replacement timing change
+        s = self
+
+        x = [20, 25, 30, 35, 40, 45, 50, 55, 60]
+        adr = [3.767, 3.791, 3.836, 3.912, 4.11, 4.23, 4.33, 4.4, 4.567]
+
+        bar = go.Bar(x=x, y=adr, showlegend=False,
+                     marker=dict(color=[s.dark, s.dark, s.dark, s.dark,
+                                        s.dark, s.dark, s.accent, s.dark,
+                                        s.dark]), text=adr,
+                     textposition='auto')
+
+        data = [bar]
+
+        layout = go.Layout(title='Losses over replacement time',
+                           xaxis=dict(title='Time for reparation, days'),
+                           yaxis=dict(title='Losses for the 1 mo period, %'),
+                           font=dict(family='Times New Roman', size=12))
+
+        fig = go.Figure(data=data, layout=layout)
+
+        # Uncomment to view the figure
+        # ply.plot(fig, filename='replace')
+
+        # Write out the figure
+        pio.write_image(fig, './Output/Charts and Images/replacement.pdf',
+                        width=1080, height=720)
+        pio.write_image(fig, './Output/Charts and Images/replacement.png',
+                        width=1080, height=720)
+
+    def costs_data(self):
+        # Display the costs distribution
+        s = self
+
+        # Create sat object
+        sat = Satellite(400, 0.1, 40, 1000, 0.005)
+        # Prepare the data
+        no_adr = s.read_csv2np('./Output/none.csv')
+        adr = s.read_csv2np('./Output/adr.csv')
+
+        # Set the sandart distribution of the debris density
+        lil = 1.146*10**(-6)*np.exp(-((1000 - 856.9)/126.7)**2)   # R20.92
+        med = 1.34*10**(-7)*np.exp(-((1000 - 860.8)/153)**2)   # R20.83
+        big = 3.016*10**(-8)*np.exp(-((1000 - 847.1)/171.2)**2)   # R20.72
+        overal = lil + med + big
+
+        # Prepare the data over Risks
+        n_dens = no_adr[no_adr.shape[0] - 1, 6]/1454977.081 + overal
+        a_dens = adr[adr.shape[0] - 1, 6]/1454977.081 + overal
+
+        time = 315361 * 100
+        n_prob = 1 - np.exp(-n_dens*sat.vol**(2/3)*.000001*time*12)
+        a_prob = 1 - np.exp(-a_dens*sat.vol**(2/3)*.000001*time*12)
+
+        n_risk = n_prob * 1600 * (sat.cost + sat.launch_cost) * 100
+        a_risk = a_prob * 1600 * (sat.cost + sat.launch_cost) * 100
+
+        n_cost = no_adr[no_adr.shape[0] - 1, 4]
+        a_cost = adr[adr.shape[0] - 1, 4]
+
+        n_spare = 0
+        a_spare = adr[adr.shape[0] - 1, 4] - adr[adr.shape[0] - 1, 5]
+
+        labels = ['Risk assessment', 'Regular costs', 'Spare costs']
+        vals1 = [n_risk, n_cost, n_spare]
+        vals2 = [n_risk, a_cost, a_spare]
+        vals3 = [a_risk, a_cost, a_spare]
+        colors = [s.accent, s.dark, s.light]
+
+        pie1 = go.Pie(labels=labels, values=vals1, hole=0.4,
+                      domain=dict(column=0),
+                      marker=dict(colors=colors), textinfo='value+percent')
+        pie2 = go.Pie(labels=labels, values=vals2, hole=0.4,
+                      domain=dict(column=1),
+                      marker=dict(colors=colors), textinfo='value+percent')
+        pie3 = go.Pie(labels=labels, values=vals3, hole=0.4,
+                      domain=dict(column=2),
+                      marker=dict(colors=colors), textinfo='value+percent')
+
+        data = [pie1, pie2, pie3]
+
+        layout = go.Layout(title='Cost distributions',
+                           grid=dict(rows=1, columns=3),
+                           font=dict(family='Times New Roman', size=12))
+
+        fig = go.Figure(data=data, layout=layout)
+
+        # Uncomment to view the figure
+        # ply.plot(fig, filename='cost')
+
+        # Write out the figure
+        pio.write_image(fig, './Output/Charts and Images/costs.pdf',
+                        width=1080, height=720)
+        pio.write_image(fig, './Output/Charts and Images/costs.png',
+                        width=1080, height=720)

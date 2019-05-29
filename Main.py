@@ -4,6 +4,7 @@ import numpy as np
 import Classes
 from Classes.Helpers import Measurements as mes
 from Classes.Helpers import Visuals as viz
+from Preprocessing import population_grid
 # Initiate the measurements class
 
 # Multiprocessing tools
@@ -31,7 +32,7 @@ n = int(1600)
 strat = 'lod'
 
 # Simulation parameters
-step = int(100)   # seconds
+step = int(500)   # seconds
 simtime = int(31536100)   # seconds
 tss = int(simtime/step)
 
@@ -51,14 +52,6 @@ print('Prepared for simulation in {}'.format(dt.now().strftime("%H:%M:%S")))
 # =============================================================================
 # # Selecting the best timestep
 # mes.step_selection(sim)
-# =============================================================================
-
-# =============================================================================
-# # Visualization process
-# vz = viz()
-# # vz.step_data()
-# vz.chunk_data()
-# vz.revenue_data('week')
 # =============================================================================
 
 if __name__ == '__main__':
