@@ -4,7 +4,7 @@ import numpy as np
 import Classes
 from Classes.Helpers import Measurements as mes
 from Classes.Helpers import Visuals as viz
-from Preprocessing import population_grid
+# from Preprocessing import population_grid
 # Initiate the measurements class
 
 # Multiprocessing tools
@@ -29,11 +29,11 @@ alt = 1000   # km
 n = int(1600)
 
 # Spare strategy
-strat = 'lod'
+strat = 'none'
 
 # Simulation parameters
 step = int(500)   # seconds
-simtime = int(31536100)   # seconds
+simtime = int(157680500)   # seconds
 tss = int(simtime/step)
 
 # CREATE A NEW INSTANCE OF SIMULATION

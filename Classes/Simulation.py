@@ -124,7 +124,7 @@ class Simulation:
 
     def step_sim(self, ts):
         # CACLULATING A STEP OF SIMULATION
-        m = Trend('poly05', 0, 0.15, 946080, 1)   # Trend object
+        m = Trend('poly05', 0, 0.15, 946080/3*2.5, 1)   # Trend object
         # Reset the parameters
         cov = 0   # Coverage
         rev = 0   # Overall revenue
