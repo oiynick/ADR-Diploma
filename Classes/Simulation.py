@@ -45,7 +45,7 @@ class Simulation:
 
         # Spare strategy
         # TODO: to change timing for the sat change
-        self.strat = Strategy(strat, self.sat, 30*24*36)
+        self.strat = Strategy(strat, self.sat, 50*24*36)
 
         # Upload money is for money grid, lifetime is for array of lifetimes
         with open('./PP_Data/market.data', 'rb') as f:
@@ -124,7 +124,7 @@ class Simulation:
 
     def step_sim(self, ts):
         # CACLULATING A STEP OF SIMULATION
-        m = Trend('poly05', 0, 0.15, 946080/3*2.5, 1)   # Trend object
+        m = Trend('poly05', 0, 0.15, 78840000/self.step, 1)   # Trend object
         # Reset the parameters
         cov = 0   # Coverage
         rev = 0   # Overall revenue
