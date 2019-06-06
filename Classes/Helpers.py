@@ -197,8 +197,7 @@ class Visuals:
                            name='Optimal usage',
                            marker=dict(color=s.dark))
         data = [scat1]
-        layout = go.Layout(title='RAM usage during the simulation',
-                           xaxis=dict(title='Overall time execution, %'),
+        layout = go.Layout(xaxis=dict(title='Overall time execution, %'),
                            yaxis=dict(title='Usage, GiB'),
                            font=dict(family='Times New Roman', size=24))
         fig = go.Figure(data=data, layout=layout)
@@ -208,7 +207,7 @@ class Visuals:
 
         # Write out the figure
         pio.write_image(fig, './Output/Charts and Images/ram.pdf',
-                        width=1080, height=720)
+                        width=1260, height=900)
 
     def step_data(self):
         # Create a bar chart of the step selection process
@@ -237,10 +236,10 @@ class Visuals:
         data = [bar1, bar4, scat1]
 
         # Create figure layout
-        layout = go.Layout(title='Time steps comparison',
-                           barmode='group',
+        layout = go.Layout(barmode='group',
                            font=dict(family='Times New Roman', size=24),
-                           xaxis=dict(title='Step size, s'),
+                           legend=dict(orientation='h', x=0, y=-.2),
+                           xaxis=dict(title='Step size, sec.'),
                            yaxis=dict(title='Time, sec.',
                                       showgrid=False),
                            yaxis2=dict(title='Average maximum error, %',
@@ -255,7 +254,7 @@ class Visuals:
 
         # Output the figure
         pio.write_image(fig, './Output/Charts and Images/step_selection.pdf',
-                        width=1080, height=720)
+                        width=1260, height=900)
 
     def chunk_data(self):
         # Create the bar chart describing the chunk size selection
@@ -267,12 +266,12 @@ class Visuals:
                       name='Computational power used on 300K steps',
                       text=[3, 5, 25, 50, 100, 100, 100],
                       textposition='auto',
+                      width=[200, 500, 500, 1000, 2000, 2000, 2000],
                       marker=dict(color=[s.dark, s.dark, s.dark, s.dark,
                                          s.accent, s.dark, s.dark]))
 
         # Create the layout for the figure
-        layout = go.Layout(title='Chunk sizes comparison',
-                           yaxis=dict(title='CPU activity, %'),
+        layout = go.Layout(yaxis=dict(title='CPU activity, %'),
                            xaxis=dict(title='Amount of steps'),
                            font=dict(family='Times New Roman', size=24))
         data = [bar1]
@@ -285,7 +284,7 @@ class Visuals:
 
         # Write out the figure
         pio.write_image(fig, './Output/Charts and Images/chunk.pdf',
-                        width=1080, height=720)
+                        width=1260, height=900)
 
     def losses_data(self, step: str, wrong_ms_model=False):
         # Losses chart export
@@ -358,9 +357,9 @@ class Visuals:
         data1 = [bar1, bar2, bar3]
 
         # Setting up the layout
-        layout1 = go.Layout(title='Benchmark revenue losses',
-                            yaxis=dict(title='Loss, %'),
+        layout1 = go.Layout(yaxis=dict(title='Loss, %'),
                             font=dict(family='Times New Roman', size=24),
+                            legend=dict(orientation='h', x=0, y=-.2),
                             xaxis=dict(title='Number of the month'))
         fig1 = go.Figure(data=data1, layout=layout1)
 
@@ -369,7 +368,7 @@ class Visuals:
 
         # Write out the figure
         pio.write_image(fig1, './Output/Charts and Images/losses.pdf',
-                        width=1080, height=720)
+                        width=1260, height=900)
 
     def revenue_data(self, step: str, wrong_ms_model=False):
         # Revenue chart export
@@ -434,8 +433,8 @@ class Visuals:
                            marker=dict(color=s.med), line=dict(width=1))
 
         # Prepare the layout for the figure
-        layout2 = go.Layout(title='Revenue revolution',
-                            yaxis=dict(title='Revenue, US$'),
+        layout2 = go.Layout(yaxis=dict(title='Revenue, US$'),
+                            legend=dict(orientation='h', x=0, y=-.2),
                             xaxis=dict(title='Number of the week'),
                             font=dict(family='Times New Roman', size=24))
         data2 = [scat1, scat2, scat3]
@@ -448,7 +447,7 @@ class Visuals:
 
         # Write out the figure
         pio.write_image(fig2, './Output/Charts and Images/revenues.pdf',
-                        width=540, height=720)
+                        width=630, height=900)
 
     def density_data(self, step: str, vol):
         # Density charts export
@@ -489,10 +488,10 @@ class Visuals:
 
         # Prepare the data for plots of the density
         scat1 = go.Scatter(x=x, y=n_dens, mode='lines',
-                           name='Density (alt: 1000 km, inc: 53), no ADR',
+                           name='Density, no ADR',
                            marker=dict(color=s.dark), line=dict(width=1))
         scat2 = go.Scatter(x=x, y=a_dens, mode='lines',
-                           name='Density (alt: 1000 km, inc: 53), ADR',
+                           name='Density, ADR',
                            marker=dict(color=s.light), line=dict(width=1))
 
         # Prepare the data for plots of the collision probability
@@ -508,17 +507,13 @@ class Visuals:
         data = [scat1, scat2, scat3, scat4]
 
         # Create the layout
-        layout = go.Layout(title='Debris density and probability of collision',
-                           xaxis=dict(title='Number of the week'),
+        layout = go.Layout(xaxis=dict(title='Number of the week'),
                            font=dict(family='Times New Roman', size=24),
+                           legend=dict(orientation='h', x=0, y=-.2),
                            yaxis=dict(title='Density',
-                                      showgrid=False,
-                                      titlefont=dict(color=s.dark),
-                                      tickfont=dict(color=s.dark)),
+                                      showgrid=False),
                            yaxis2=dict(title='Collision probability',
                                        showgrid=False,
-                                       titlefont=dict(color=s.light),
-                                       tickfont=dict(color=s.light),
                                        side='right',
                                        overlaying='y'))
         fig = go.Figure(data=data, layout=layout)
@@ -528,7 +523,7 @@ class Visuals:
 
         # Write out the figure
         pio.write_image(fig, './Output/Charts and Images/density.pdf',
-                        width=1080, height=720)
+                        width=1260, height=900)
 
     def coverage_data(self, step):
         # Export coverage data as a figure
@@ -566,7 +561,7 @@ class Visuals:
         data = [scat1, scat2]
 
         # Create the layout
-        layout = go.Layout(title='Coverage rate revolution',
+        layout = go.Layout(legend=dict(orientation='h', x=0, y=-.2),
                            xaxis=dict(title='Number of the week'),
                            yaxis=dict(title='Coverage rate, %'),
                            font=dict(family='Times New Roman', size=24))
@@ -577,7 +572,7 @@ class Visuals:
 
         # Write out the figure
         pio.write_image(fig, './Output/Charts and Images/coverage.pdf',
-                        width=1080, height=720)
+                        width=1260, height=900)
 
     def timing_data(self):
         # Export timings
@@ -593,8 +588,8 @@ class Visuals:
                                                    s.darkop, s.darkop]),
                       name='Execution time', text=y, textposition='auto')
         data = [bar1]
-        layout = go.Layout(title='Timings for different simulation periods',
-                           yaxis=dict(title='Time, h'),
+        layout = go.Layout(yaxis=dict(title='Time, h'),
+                           legend=dict(orientation='h', x=0, y=-.2),
                            xaxis=dict(title='Simulation period, years'),
                            font=dict(family='Times New Roman', size=24))
         fig = go.Figure(data=data, layout=layout)
@@ -604,7 +599,7 @@ class Visuals:
 
         # Write out the figure
         pio.write_image(fig, './Output/Charts and Images/time.pdf',
-                        width=1080, height=720)
+                        width=1260, height=900)
 
     def sats_data(self):
         # Printing four charts with data over
@@ -675,8 +670,8 @@ class Visuals:
 
         data = [bar1, bar2, bar3, bar4, bar5, bar6, bar7, bar8]
 
-        layout = go.Layout(title='Number of satellite influence',
-                           barmode='group',
+        layout = go.Layout(barmode='group',
+                           legend=dict(orientation='h', x=0, y=-.2),
                            font=dict(family='Times New Roman', size=24),
                            xaxis=dict(domain=[0, 0.45],
                                       title='Number of sats'),
@@ -718,8 +713,7 @@ class Visuals:
 
         data = [bar]
 
-        layout = go.Layout(title='Losses over replacement time',
-                           xaxis=dict(title='Time for reparation, days'),
+        layout = go.Layout(xaxis=dict(title='Time for reparation, days'),
                            yaxis=dict(title='Losses for the 1 mo period, %'),
                            font=dict(family='Times New Roman', size=24))
 
@@ -730,7 +724,7 @@ class Visuals:
 
         # Write out the figure
         pio.write_image(fig, './Output/Charts and Images/replacement.pdf',
-                        width=1080, height=720)
+                        width=1260, height=900)
 
     def costs_data(self):
         # Display the costs distribution
@@ -783,8 +777,7 @@ class Visuals:
 
         data = [pie1, pie2, pie3]
 
-        layout = go.Layout(title='Cost distributions',
-                           grid=dict(rows=1, columns=3),
+        layout = go.Layout(grid=dict(rows=1, columns=3),
                            font=dict(family='Times New Roman', size=24))
 
         fig = go.Figure(data=data, layout=layout)
@@ -794,7 +787,7 @@ class Visuals:
 
         # Write out the figure
         pio.write_image(fig, './Output/Charts and Images/costs.pdf',
-                        width=1080, height=720)
+                        width=1260, height=900)
 
     def rev5_data(self, step: str):
         # Revenue chart export
@@ -842,11 +835,11 @@ class Visuals:
                            name='Revenue with ADR', mode='lines',
                            line=dict(width=1, dash='dash'))
         scat2 = go.Scatter(x=i_rev[:, 0], y=i_rev[:, 1],
-                           name='Ideal possible revenue', mode='lines',
+                           name='Benchmark revenue', mode='lines',
                            marker=dict(color=s.light), line=dict(width=1))
 
         # Prepare the layout for the figure
-        layout2 = go.Layout(title='Revenue revolution',
+        layout2 = go.Layout(legend=dict(orientation='h', x=0, y=-.2),
                             yaxis=dict(title='Revenue, US$'),
                             xaxis=dict(title='Number of the {}'.format(step)),
                             font=dict(family='Times New Roman', size=24))
@@ -860,7 +853,7 @@ class Visuals:
 
         # Write out the figure
         pio.write_image(fig2, './Output/Charts and Images/rev5ye.pdf',
-                        width=540, height=720)
+                        width=630, height=900)
 
     def revnoncum_data(self, step: str):
         # Revenue chart export
@@ -915,21 +908,22 @@ class Visuals:
             fit[i, 1] = Visuals.t2(i, *i_coef)
 
         # Prepare data for the plots
-        scat1 = go.Scatter(x=x, y=ua_rev, marker=dict(color=s.darkop),
+        scat1 = go.Scatter(x=x, y=ua_rev, marker=dict(color=s.dark),
                            name='Revenue with ADR', mode='lines',
                            line=dict(width=1))
-        scat2 = go.Scatter(x=x, y=ui_rev, marker=dict(color=s.lightop),
+        scat2 = go.Scatter(x=x, y=ui_rev, marker=dict(color=s.light),
                            name='Benchmark revenue', mode='lines',
                            line=dict(width=1))
         scat3 = go.Scatter(x=x, y=fit[:, 0], marker=dict(color=s.dark),
                            name='Revenue with ADR, approximation',
-                           mode='lines', line=dict(width=1))
-        scat4 = go.Scatter(x=x, y=fit[:, 1], marker=dict(color=s.light),
+                           mode='lines', line=dict(width=1, dash='dash'))
+        scat4 = go.Scatter(x=x, y=fit[:, 1],
+                           marker=dict(color=s.light),
                            name='Benchmark revenue, approximation',
-                           mode='lines', line=dict(width=1))
+                           mode='lines', line=dict(width=1, dash='dash'))
 
         # Prepare the layout for the figure
-        layout2 = go.Layout(title='Non-cummulative revenue evolution',
+        layout2 = go.Layout(legend=dict(orientation='h', x=0, y=-.2),
                             yaxis=dict(title='Revenue, US$'),
                             xaxis=dict(title='Number of the {}'.format(step)),
                             font=dict(family='Times New Roman', size=24))
@@ -943,7 +937,7 @@ class Visuals:
 
         # Write out the figure
         pio.write_image(fig2, './Output/Charts and Images/noncum_rev.pdf',
-                        width=1080, height=720)
+                        width=1260, height=900)
 
     def verification1_data(self):
         # Revenue chart export
@@ -978,12 +972,13 @@ class Visuals:
         # Prepare the sorted data
         rev = s.sort_data(36*24*365/5, result, 2)
 
+        labels = ['{:1.2f}'.format(i / 75) for i in rev[:, 1]]
         # Prepare data for the plots
-        scat1 = go.Bar(x=rev[:, 0], y=rev[:, 1], marker=dict(color=s.med))
+        scat1 = go.Bar(x=rev[:, 0], y=rev[:, 1], marker=dict(color=s.med),
+                       text=labels, textposition='auto')
 
         # Prepare the layout for the figure
-        layout2 = go.Layout(title='Revenue annual summ revolution',
-                            yaxis=dict(title='Revenue, US$'),
+        layout2 = go.Layout(yaxis=dict(title='Revenue, US$'),
                             xaxis=dict(title='Number of the year'),
                             font=dict(family='Times New Roman', size=24))
         data2 = [scat1]
@@ -996,7 +991,7 @@ class Visuals:
 
         # Write out the figure
         pio.write_image(fig2, './Output/Charts and Images/spacex.pdf',
-                        width=1080, height=720)
+                        width=1260, height=900)
 
     def verification2_data(self):
         # Revenue chart export
@@ -1040,13 +1035,14 @@ class Visuals:
             else:
                 n_rev[i, 1] = rev[i, 1]
 
+        labels = ['{:1.2f}'.format(i / 75) for i in n_rev[:, 1]]
         # Prepare data for the plots
         scat1 = go.Bar(x=n_rev[:, 0], y=n_rev[:, 1] / 75,
-                       marker=dict(color=s.med))
+                       marker=dict(color=s.med), text=labels,
+                       textposition='auto')
 
         # Prepare the layout for the figure
-        layout2 = go.Layout(title='Revenue annual summ revolution',
-                            yaxis=dict(title='Revenue, US$'),
+        layout2 = go.Layout(yaxis=dict(title='Revenue, US$'),
                             xaxis=dict(title='Number of the year'),
                             font=dict(family='Times New Roman', size=24))
         data2 = [scat1]
@@ -1059,7 +1055,7 @@ class Visuals:
 
         # Write out the figure
         pio.write_image(fig2, './Output/Charts and Images/iridium.pdf',
-                        width=1080, height=720)
+                        width=1260, height=900)
 
     def comparison_data(self):
         # Create a scatter polar plot of the comparison of different business
@@ -1082,7 +1078,8 @@ class Visuals:
                                 line=dict(width=3), name='Dynamic flat')
         data = [scat1, scat2, scat3]
 
-        layout = go.Layout(polar=dict(radialaxis=dict(visible=True,
+        layout = go.Layout(font=dict(family='Times New Roman', size=24),
+                           polar=dict(radialaxis=dict(visible=True,
                                                       range=[0, 10])))
         fig = go.Figure(data=data, layout=layout)
 
@@ -1091,7 +1088,7 @@ class Visuals:
 
         # Write out the figure
         pio.write_image(fig, './Output/Charts and Images/rose_comp.pdf',
-                        width=1080, height=720)
+                        width=1260, height=900)
 
     def satsdiff_data(self, step):
         # Revenue chart export
@@ -1152,7 +1149,7 @@ class Visuals:
                            line=dict(width=1, dash='dash'), fill='tozeroy')
 
         # Prepare the layout for the figure
-        layout2 = go.Layout(title='Non-cummulative revenue evolution',
+        layout2 = go.Layout(legend=dict(x=0, y=1.2),
                             yaxis=dict(title='Revenue, US$'),
                             xaxis=dict(title='Number of the seconds'),
                             font=dict(family='Times New Roman', size=24))
@@ -1165,8 +1162,8 @@ class Visuals:
         # ply.plot(fig2, filename='rev')
 
         # Write out the figure
-        pio.write_image(fig2, './Output/Charts and Images/noncum_rev.pdf',
-                        width=1080, height=720)
+        pio.write_image(fig2, './Output/Charts and Images/difference.pdf',
+                        width=1260, height=900)
 
     def reward_data(self):
         s = self
@@ -1178,11 +1175,10 @@ class Visuals:
         data = [go.Bar(x=x, y=y, showlegend=False, text=y, textposition='auto',
                        marker=dict(color=s.dark))]
 
-        layout = go.Layout(title='Revenue revolution',
-                           yaxis=dict(title='Base cost multiplier'),
+        layout = go.Layout(yaxis=dict(title='Base cost multiplier'),
                            xaxis=dict(title='Month of the 1st year'),
                            font=dict(family='Times New Roman', size=24))
 
         fig2 = go.Figure(data=data, layout=layout)
         pio.write_image(fig2, './Output/Charts and Images/reward.pdf',
-                        width=1080, height=720)
+                        width=1260, height=900)
