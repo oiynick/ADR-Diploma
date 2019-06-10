@@ -422,19 +422,18 @@ class Visuals:
 
         # Prepare data for the plots
         scat1 = go.Scatter(x=a_revenue[:, 0], y=a_revenue[:, 1],
-                           name='Revenue with ADR', mode='lines',
+                           name='ADR', mode='lines',
                            marker=dict(color=s.dark),
                            line=dict(width=1, dash='dot'))
         scat2 = go.Scatter(x=i_revenue[:, 0], y=i_revenue[:, 1],
-                           name='Ideal possible revenue', mode='lines',
+                           name='Bencmark', mode='lines',
                            marker=dict(color=s.light), line=dict(width=1))
         scat3 = go.Scatter(x=n_revenue[:, 0], y=n_revenue[:, 1],
-                           name='Revenue with no spare strategy', mode='lines',
+                           name='No ADR', mode='lines',
                            marker=dict(color=s.med), line=dict(width=1))
 
         # Prepare the layout for the figure
         layout2 = go.Layout(yaxis=dict(title='Revenue, US$'),
-                            legend=dict(orientation='h', x=0, y=-.2),
                             xaxis=dict(title='Number of the week'),
                             font=dict(family='Times New Roman', size=24))
         data2 = [scat1, scat2, scat3]
@@ -447,7 +446,7 @@ class Visuals:
 
         # Write out the figure
         pio.write_image(fig2, './Output/Charts and Images/revenues.pdf',
-                        width=630, height=900)
+                        width=1260, height=500)
 
     def density_data(self, step: str, vol):
         # Density charts export
@@ -492,7 +491,7 @@ class Visuals:
                            marker=dict(color=s.dark), line=dict(width=1))
         scat2 = go.Scatter(x=x, y=a_dens, mode='lines',
                            name='Density, ADR',
-                           marker=dict(color=s.light), line=dict(width=1))
+                           marker=dict(color=s.light), line=dict(width=3))
 
         # Prepare the data for plots of the collision probability
         scat3 = go.Scatter(x=x, y=n_col, mode='lines', yaxis='y2',
@@ -502,7 +501,7 @@ class Visuals:
         scat4 = go.Scatter(x=x, y=a_col, mode='lines', yaxis='y2',
                            name='Collision probability with ADR',
                            marker=dict(color=s.light),
-                           line=dict(width=1, dash='dash'))
+                           line=dict(width=3, dash='dash'))
 
         data = [scat1, scat2, scat3, scat4]
 
@@ -832,15 +831,14 @@ class Visuals:
 
         # Prepare data for the plots
         scat1 = go.Scatter(x=rev[:, 0], y=rev[:, 1], marker=dict(color=s.dark),
-                           name='Revenue with ADR', mode='lines',
+                           name='No ADR', mode='lines',
                            line=dict(width=1, dash='dash'))
         scat2 = go.Scatter(x=i_rev[:, 0], y=i_rev[:, 1],
-                           name='Benchmark revenue', mode='lines',
+                           name='ADR', mode='lines',
                            marker=dict(color=s.light), line=dict(width=1))
 
         # Prepare the layout for the figure
-        layout2 = go.Layout(legend=dict(orientation='h', x=0, y=-.2),
-                            yaxis=dict(title='Revenue, US$'),
+        layout2 = go.Layout(yaxis=dict(title='Revenue, US$'),
                             xaxis=dict(title='Number of the {}'.format(step)),
                             font=dict(family='Times New Roman', size=24))
         data2 = [scat1, scat2]
@@ -853,7 +851,7 @@ class Visuals:
 
         # Write out the figure
         pio.write_image(fig2, './Output/Charts and Images/rev5ye.pdf',
-                        width=630, height=900)
+                        width=1260, height=500)
 
     def revnoncum_data(self, step: str):
         # Revenue chart export
@@ -1142,10 +1140,10 @@ class Visuals:
 
         # Prepare data for the plots
         scat1 = go.Scatter(x=x, y=ua_rev[:, 1], marker=dict(color=s.darkop),
-                           name='One lost satellite', mode='lines',
+                           name='Two consequent satellites', mode='lines',
                            line=dict(width=1, dash='dash'), fill='tozeroy')
         scat2 = go.Scatter(x=x, y=ui_rev[:, 1], marker=dict(color=s.lightop),
-                           name='Two consequent satellites', mode='lines',
+                           name='One lost satellite', mode='lines',
                            line=dict(width=1, dash='dash'), fill='tozeroy')
 
         # Prepare the layout for the figure
@@ -1181,4 +1179,26 @@ class Visuals:
 
         fig2 = go.Figure(data=data, layout=layout)
         pio.write_image(fig2, './Output/Charts and Images/reward.pdf',
+                        width=1260, height=900)
+
+    def ms_data(self):
+        # Market Share data plot
+        x = [i for i in range(6*12)]
+        y = [Visuals.t(i*3600*24*7*4)*100 for i in range(6*12)]
+
+        # Make the plot
+        data = [go.Scatter(x=x, y=y, marker=dict(color=self.dark),
+                           name='SpaceX', mode='lines', line=dict(width=1.5))]
+        layout = go.Layout(yaxis=dict(title='Market share, %'),
+                           xaxis=dict(title='Number of the month'),
+                           font=dict(family='Times New Roman', size=24))
+
+        # Create the figure
+        fig2 = go.Figure(data=data, layout=layout)
+
+        # Uncomment to view the figure
+        # ply.plot(fig2, filename='rev')
+
+        # Write out the figure
+        pio.write_image(fig2, './Output/Charts and Images/marketshare.pdf',
                         width=1260, height=900)
