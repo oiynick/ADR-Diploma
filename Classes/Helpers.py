@@ -351,14 +351,14 @@ class Visuals:
         bar2 = go.Scatter(x=x, y=diff_a, name='ADR and benchmark',
                           marker=dict(color=s.dark), line=dict(dash='dash'))
         bar3 = go.Bar(x=x, y=diff, name='Losses of revenue, ADR', text=label,
-                      marker=dict(color=s.medop), textposition='auto')
+                      marker=dict(color=s.med), textposition='auto')
 
         # Preparing data
-        data1 = [bar1, bar2, bar3]
+        data1 = [bar3]
 
         # Setting up the layout
         layout1 = go.Layout(yaxis=dict(title='Loss, %'),
-                            font=dict(family='Times New Roman', size=24),
+                            font=dict(family='Helvetica Neue Thin', size=24),
                             legend=dict(orientation='h', x=0, y=-.2),
                             xaxis=dict(title='Number of the month'))
         fig1 = go.Figure(data=data1, layout=layout1)
@@ -368,7 +368,7 @@ class Visuals:
 
         # Write out the figure
         pio.write_image(fig1, './Output/Charts and Images/losses.pdf',
-                        width=1260, height=900)
+                        width=1260, height=450)
 
     def revenue_data(self, step: str, wrong_ms_model=False):
         # Revenue chart export
@@ -1171,15 +1171,15 @@ class Visuals:
              1.53, 1.56, 1.58, 2]
 
         data = [go.Bar(x=x, y=y, showlegend=False, text=y, textposition='auto',
-                       marker=dict(color=s.dark))]
+                       marker=dict(color=s.med))]
 
         layout = go.Layout(yaxis=dict(title='Base cost multiplier'),
                            xaxis=dict(title='Month of the 1st year'),
-                           font=dict(family='Times New Roman', size=24))
+                           font=dict(family='Helvetica Neue Thin', size=24))
 
         fig2 = go.Figure(data=data, layout=layout)
         pio.write_image(fig2, './Output/Charts and Images/reward.pdf',
-                        width=1260, height=900)
+                        width=1260, height=600)
 
     def ms_data(self):
         # Market Share data plot
@@ -1191,7 +1191,7 @@ class Visuals:
                            name='SpaceX', mode='lines', line=dict(width=1.5))]
         layout = go.Layout(yaxis=dict(title='Market share, %'),
                            xaxis=dict(title='Number of the month'),
-                           font=dict(family='Times New Roman', size=24))
+                           font=dict(family='Helvetica Neue Thin', size=24))
 
         # Create the figure
         fig2 = go.Figure(data=data, layout=layout)
@@ -1202,3 +1202,28 @@ class Visuals:
         # Write out the figure
         pio.write_image(fig2, './Output/Charts and Images/marketshare.pdf',
                         width=1260, height=900)
+
+    def reliability(self):
+        # Market Share data plot
+        x = [i for i in range(700)]
+        y = [np.exp(-(i/8316)**.3875) for i in range(700)]
+        x_f = [x[i]/100 for i in range(700)]
+
+        # Make the plot
+        data = [go.Scatter(x=x_f, y=y, marker=dict(color=self.dark),
+                           name='rel', mode='lines', line=dict(width=1.5))]
+        layout = go.Layout(yaxis=dict(title='Reliability'),
+                           xaxis=dict(title='Number of the year',
+                                      tickmode='linear',
+                                      tick0=0, dtick=1),
+                           font=dict(family='Times New Roman', size=24))
+
+        # Create the figure
+        fig2 = go.Figure(data=data, layout=layout)
+
+        # Uncomment to view the figure
+        # ply.plot(fig2, filename='rev')
+
+        # Write out the figure
+        pio.write_image(fig2, './Output/Charts and Images/reli.pdf',
+                        width=1260, height=450)
